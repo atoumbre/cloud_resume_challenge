@@ -52,7 +52,7 @@ cloud_resume_challenge/
 ## Deployment
 
 Pull requests are validated by [`.github/workflows/ci.yml`](./.github/workflows/ci.yml). Deployments happen through [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml) on pushes to `main`.
-Shared validation logic is centralized in reusable workflows under [`.github/workflows/`](./.github/workflows/).
+Shared validation and build logic is centralized in reusable workflows under [`.github/workflows/`](./.github/workflows/).
 
 ### CI/CD flow
 

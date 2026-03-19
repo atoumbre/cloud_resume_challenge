@@ -11,17 +11,22 @@ jobs:
   backend-tests:
     uses: ./.github/workflows/reusable-backend-tests.yml
 
-  frontend-build:
+  frontend-validate:
     uses: ./.github/workflows/reusable-frontend-build.yml
     with:
       public_api_url: https://example.execute-api.us-east-1.amazonaws.com
 
   infra:
-    needs: [terraform, backend-tests, frontend-build]
+    needs: [terraform, backend-tests, frontend-validate]
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
+    outputs:
+      api_endpoint: ${{ steps.tf.outputs.api_endpoint }}
+      cloudfront_distribution_id: ${{ steps.tf.outputs.cloudfront_distribution_id }}
+      lambda_name: ${{ steps.tf.outputs.lambda_name }}
+      s3_bucket_name: ${{ steps.tf.outputs.s3_bucket_name }}
     env:
       TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
@@ -53,6 +58,14 @@ jobs:
       - name: Terraform Apply
         run: terraform -chdir=infra apply -auto-approve
 
+      - name: Capture Terraform Outputs
+        id: tf
+        run: |
+          echo "api_endpoint=$(terraform -chdir=infra output -raw api_endpoint)" >> "$GITHUB_OUTPUT"
+          echo "cloudfront_distribution_id=$(terraform -chdir=infra output -raw cloudfront_distribution_id)" >> "$GITHUB_OUTPUT"
+          echo "lambda_name=$(terraform -chdir=infra output -raw lambda_function_name)" >> "$GITHUB_OUTPUT"
+          echo "s3_bucket_name=$(terraform -chdir=infra output -raw frontend_s3_bucket_name)" >> "$GITHUB_OUTPUT"
+
   backend:
     needs: infra
     runs-on: ubuntu-latest
@@ -80,78 +93,41 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: us-east-1
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Fetch Terraform Outputs
-        id: tf
-        run: |
-          terraform -chdir=infra init
-          echo "LAMBDA_NAME=$(terraform -chdir=infra output -raw lambda_function_name)" >> "$GITHUB_OUTPUT"
-
       - name: Deploy Backend
         working-directory: backend
         run: |
           zip -j lambda.zip app.py
-          aws lambda update-function-code --function-name "${{ steps.tf.outputs.LAMBDA_NAME }}" --zip-file fileb://lambda.zip
+          aws lambda update-function-code --function-name "${{ needs.infra.outputs.lambda_name }}" --zip-file fileb://lambda.zip
+
+  frontend-build:
+    needs: infra
+    uses: ./.github/workflows/reusable-frontend-build.yml
+    with:
+      public_api_url: ${{ needs.infra.outputs.api_endpoint }}
+      upload_artifact: true
+      artifact_name: frontend-dist
 
   frontend:
-    needs: infra
+    needs: [infra, frontend-build]
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
-    env:
-      TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Restore Terraform Plugin Cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ github.workspace }}/.terraform.d/plugin-cache
-          key: ${{ runner.os }}-terraform-${{ hashFiles('infra/.terraform.lock.hcl') }}
-
-      - name: Create Terraform Plugin Cache Directory
-        run: mkdir -p "$TF_PLUGIN_CACHE_DIR"
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: us-east-1
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Fetch Terraform Outputs
-        id: tf
-        run: |
-          terraform -chdir=infra init
-          echo "S3_BUCKET_NAME=$(terraform -chdir=infra output -raw frontend_s3_bucket_name)" >> "$GITHUB_OUTPUT"
-          echo "CLOUDFRONT_DISTRIBUTION_ID=$(terraform -chdir=infra output -raw cloudfront_distribution_id)" >> "$GITHUB_OUTPUT"
-          echo "API_ENDPOINT=$(terraform -chdir=infra output -raw api_endpoint)" >> "$GITHUB_OUTPUT"
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Download Frontend Artifact
+        uses: actions/download-artifact@v4
         with:
-          node-version: "22"
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
-
-      - name: Install Frontend Dependencies
-        working-directory: frontend
-        run: npm ci
-
-      - name: Build Frontend
-        working-directory: frontend
-        env:
-          PUBLIC_API_URL: ${{ steps.tf.outputs.API_ENDPOINT }}
-        run: npm run build
+          name: frontend-dist
+          path: frontend/dist
 
       - name: Sync Frontend to S3
-        run: aws s3 sync frontend/dist/ "s3://${{ steps.tf.outputs.S3_BUCKET_NAME }}" --delete
+        run: aws s3 sync frontend/dist/ "s3://${{ needs.infra.outputs.s3_bucket_name }}" --delete
 
       - name: Invalidate CloudFront Cache
-        run: aws cloudfront create-invalidation --distribution-id "${{ steps.tf.outputs.CLOUDFRONT_DISTRIBUTION_ID }}" --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id "${{ needs.infra.outputs.cloudfront_distribution_id }}" --paths "/*"

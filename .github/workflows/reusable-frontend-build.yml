@@ -7,6 +7,16 @@ on:
         description: Public API URL available during the frontend build.
         required: true
         type: string
+      upload_artifact:
+        description: Whether to upload the built frontend as a workflow artifact.
+        required: false
+        default: false
+        type: boolean
+      artifact_name:
+        description: Artifact name used when uploading the built frontend.
+        required: false
+        default: frontend-dist
+        type: string
 
 jobs:
   frontend:
@@ -35,3 +45,11 @@ jobs:
         env:
           PUBLIC_API_URL: ${{ inputs.public_api_url }}
         run: npm run build
+
+      - name: Upload Frontend Artifact
+        if: ${{ inputs.upload_artifact }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: frontend/dist
+          if-no-files-found: error
