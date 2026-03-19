@@ -24,6 +24,8 @@ ROOT = Path(__file__).resolve().parent
 INFRA_DIR = ROOT / "infra"
 FRONTEND_DIR = ROOT / "frontend"
 ENV_FILE = ROOT / ".env"
+TFVARS_FILE = INFRA_DIR / "terraform.tfvars"
+TFVARS_EXAMPLE_FILE = INFRA_DIR / "terraform.tfvars.example"
 
 
 def load_env_file() -> None:
@@ -48,6 +50,22 @@ def require_tools(*tool_names: str) -> None:
     missing = [tool for tool in tool_names if shutil.which(tool) is None]
     if missing:
         print(f"Missing required tools: {', '.join(missing)}", file=sys.stderr)
+        sys.exit(1)
+
+
+def require_local_config() -> None:
+    if not TFVARS_FILE.exists():
+        print(
+            f"Missing {TFVARS_FILE}. Copy {TFVARS_EXAMPLE_FILE.name} to terraform.tfvars and fill in the required values.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    if not os.environ.get("TF_VAR_cloudflare_api_token"):
+        print(
+            "Missing TF_VAR_cloudflare_api_token. Export it directly or provide it in .env before running this script.",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
 
@@ -84,6 +102,7 @@ def terraform_outputs() -> dict[str, object]:
 def main() -> None:
     load_env_file()
     require_tools("aws", "terraform", "npm", "python3")
+    require_local_config()
 
     print("Checking AWS caller identity")
     run_command(["aws", "sts", "get-caller-identity"], capture=True)
@@ -101,7 +120,7 @@ def main() -> None:
     website_url = outputs.get("website_url", {}).get("value")
 
     print("Installing frontend dependencies")
-    run_command(["npm", "install"], cwd=FRONTEND_DIR)
+    run_command(["npm", "ci"], cwd=FRONTEND_DIR)
 
     print("Building Astro frontend")
     frontend_env = os.environ.copy()

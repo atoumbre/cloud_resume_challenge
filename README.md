@@ -63,9 +63,9 @@ Shared validation and build logic is centralized in reusable workflows under [`.
 5. The frontend builds with `PUBLIC_API_URL` set from Terraform outputs.
 6. The generated `frontend/dist/` assets are synced to S3 and CloudFront is invalidated.
 
-### Optional local deploy helper
+### local deploy helper
 
-[`deploy_local.py`](./deploy_local.py) is an optional helper for manual deployment. It follows the same high-level flow as CI: Terraform apply, Astro build, S3 sync, CloudFront invalidation.
+[`deploy_local.py`](./deploy_local.py) is an helper for manual deployment. It follows the same high-level flow as CI: Terraform apply, Astro build, S3 sync, CloudFront invalidation.
 
 Run it from the repo root:
 
