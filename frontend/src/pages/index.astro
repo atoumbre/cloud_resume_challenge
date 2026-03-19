@@ -1,0 +1,369 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+// Visitor Counter Variable passed via static-bake or dynamically rendered
+const isProduction = import.meta.env.PROD;
+---
+
+<Layout>
+  <!-- 🌊 Background Effects -->
+  <div
+    class="fixed inset-0 bg-gradient-to-br from-neutral-900 via-zinc-900 to-black -z-10"
+  >
+  </div>
+  <div
+    class="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent -z-10"
+  >
+  </div>
+
+  <!-- 👁️ Floating Visitor Counter -->
+  <div
+    id="visitor_counter_pill"
+    class="fixed bottom-6 right-6 inline-flex items-center gap-2 bg-zinc-900/40 border border-zinc-800/50 backdrop-blur-md px-4 py-2 rounded-full shadow-2xl select-none hover:border-zinc-700 hover:scale-105 transition-all duration-300 z-50 font-sans"
+  >
+    <!-- Pulse Glow Dot -->
+    <span class="relative flex h-2 w-2 ml-1">
+      <span
+        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"
+      ></span>
+      <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"
+      ></span>
+    </span>
+
+    <!-- Icon -->
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-4 w-4 text-neutral-400"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+      ></path>
+    </svg>
+
+    <span class="text-xs font-semibold tracking-wide text-neutral-400"
+      >VIEWS</span
+    >
+    <span
+      id="visitor_count_display"
+      class="font-bold text-sm bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent"
+      >...</span
+    >
+  </div>
+
+  <main class="max-w-5xl mx-auto px-6 pb-24 space-y-20 mt-12">
+    <!-- 🦸 Hero Section -->
+    <section class="hero text-center py-10">
+      <div class="hero-content flex-col">
+        <!-- Profile Frame -->
+        <div class="avatar online">
+          <div
+            class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 shadow-2xl"
+          >
+            <!-- Using local or standard default avatar since asset is downloaded natively -->
+            <img src="/photo.jpeg" alt="Atoumbré Avatar" />
+          </div>
+        </div>
+        <div class="max-w-xl">
+          <h1
+            class="text-5xl font-extrabold tracking-tight text-white mt-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+          >
+            Atoumbré Kouassi
+          </h1>
+          <p class="text-xl text-neutral-400 font-semibold mt-2">
+            Cloud and Software Solution Builder
+          </p>
+          <p class="text-sm text-neutral-500 mt-1">
+            Former IT Service Manager • 17+ Years Exp.
+          </p>
+
+          <!-- CTA Buttons -->
+          <div class="flex gap-3 justify-center mt-6">
+            <a
+              href="https://peerlist.io/atoumbre"
+              target="_blank"
+              class="btn btn-primary btn-sm rounded-lg shadow-lg"
+              >Peerlist Profile</a
+            >
+            <a
+              href="mailto:atoumbre@gmail.com"
+              class="btn btn-outline btn-sm rounded-lg border-neutral-600 text-neutral-300 hover:bg-white hover:text-black hover:border-white transition-all duration-300 gap-2 flex items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                ></path>
+              </svg>
+              Contact Me
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🛠️ Skills Section -->
+    <section>
+      <h2
+        class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2"
+      >
+        Technical Skills & Arsenal
+      </h2>
+      <div class="flex flex-wrap gap-2">
+        {
+          [
+            "AWS",
+            "Terraform",
+            "GitHub",
+            "Actions",
+            "TypeScript",
+            "Rust",
+            "Python",
+            "Grafana",
+            "OpenTelemetry",
+            "SQL",
+            "PowerBI",
+            "Svelte",
+            "Dart",
+            "Flutter",
+          ].map((skill) => (
+            <div class="badge badge-lg badge-neutral bg-zinc-800/80 hover:bg-zinc-700 transition-all font-semibold rounded-md border border-zinc-700/50">
+              {skill}
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- 💼 Experience timeline -->
+    <section>
+      <h2
+        class="text-2xl font-bold text-white mb-8 border-b border-neutral-800 pb-2"
+      >
+        Professional Experience
+      </h2>
+      <ul
+        class="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical"
+      >
+        <!-- 1. Kauris -->
+        <li>
+          <div class="timeline-middle text-primary">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              ><path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"></path></svg
+            >
+          </div>
+          <div class="timeline-start md:text-end mb-10 mr-4">
+            <time class="font-mono italic text-neutral-500"
+              >Dec 2025 - Present</time
+            >
+            <div class="text-lg font-bold text-white">
+              Cloud Engineer (Intern)
+            </div>
+            <div class="text-sm text-primary font-semibold">
+              Kauris • Canada
+            </div>
+            <p class="text-neutral-400 mt-2 text-sm leading-relaxed">
+              Automating Grafana Cloud environments enrollment. Leveraged
+              Terraform, OpenTelemetry and Grafana to standardize full
+              observability stack rollouts for engineering teams.
+            </p>
+          </div>
+          <hr class="bg-blue-500" />
+        </li>
+
+        <!-- 2. Aviat Networks - Data Engineer -->
+        <li>
+          <hr class="bg-blue-500" />
+          <div class="timeline-middle text-primary">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              ><path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"></path></svg
+            >
+          </div>
+          <div class="timeline-end mb-10 ml-4">
+            <time class="font-mono italic text-neutral-500"
+              >Mar 2025 - Dec 2025</time
+            >
+            <div class="text-lg font-bold text-white">Data Engineer</div>
+            <div class="text-sm text-primary font-semibold">
+              Aviat Networks • Côte d'Ivoire
+            </div>
+            <p class="text-neutral-400 mt-2 text-sm leading-relaxed">
+              Analyzed operational nodes (SQL/Athena) lifting proactive scaling
+              opportunities by 50%. Built governance dashboard flows mapping
+              60k+ critical KPIs reducing field deployment latency weights.
+            </p>
+          </div>
+          <hr />
+        </li>
+
+        <!-- 3. Aviat Networks - SDM -->
+        <li>
+          <hr />
+          <div class="timeline-middle">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              ><path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"></path></svg
+            >
+          </div>
+          <div class="timeline-start md:text-end mb-10 mr-4">
+            <time class="font-mono italic text-neutral-500"
+              >Sep 2015 - Feb 2025</time
+            >
+            <div class="text-lg font-bold text-white">
+              Service Delivery Manager
+            </div>
+            <div class="text-sm text-primary font-semibold">
+              Aviat Networks (French WECA)
+            </div>
+            <p class="text-neutral-400 mt-2 text-sm leading-relaxed">
+              Ensured strict SLA compliance for top-tier telecom carriers across
+              West and Central Africa maximizing contract margins through direct
+              performance optimization loops.
+            </p>
+          </div>
+          <hr />
+        </li>
+
+        <!-- 4. Numerics -->
+        <li>
+          <hr />
+          <div class="timeline-middle">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              ><path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"></path></svg
+            >
+          </div>
+          <div class="timeline-end mb-4 ml-4">
+            <time class="font-mono italic text-neutral-500"
+              >May 2005 - Aug 2006</time
+            >
+            <div class="text-lg font-bold text-white">
+              Software Engineering Team Leader
+            </div>
+            <div class="text-sm text-primary font-semibold">
+              Numerics (IT Cabinet)
+            </div>
+            <p class="text-neutral-400 mt-2 text-sm leading-relaxed">
+              Built scalable HR payroll logic backbones covering 20,000+ total
+              ledger integrations, expanding banking asset validations across
+              domestic bureaus efficiently.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 🎓 Education Section -->
+    <section>
+      <h2
+        class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2"
+      >
+        Education & Growth
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div
+          class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl hover:border-neutral-700 transition-all"
+        >
+          <div class="card-body">
+            <h3 class="card-title text-white">Master of Science (MS)</h3>
+            <p class="text-xs text-primary font-mono">
+              Statistics & Economics Engineering
+            </p>
+            <p class="text-sm text-neutral-400">
+              École Nationale de Statistique et d'Économie Appliquée
+            </p>
+          </div>
+        </div>
+        <div
+          class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl hover:border-neutral-700 transition-all"
+        >
+          <div class="card-body">
+            <h3 class="card-title text-white">
+              Bachelor of Engineering (BEng)
+            </h3>
+            <p class="text-xs text-primary font-mono">Electrical Engineering</p>
+            <p class="text-sm text-neutral-400">
+              Institut National Polytechnique Félix HOUPHOUËT-BOIGNY
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 📝 Footer -->
+  <footer
+    class="footer footer-center p-10 bg-neutral-900/50 backdrop-blur-md text-neutral-500 border-t border-neutral-800 mt-20"
+  >
+    <div>
+      <p class="font-bold tracking-wide">Atoumbré Kouassi &copy; 2026</p>
+      <p class="text-sm mt-1">Built with Astro + DaisyUI + AWS CloudFront</p>
+
+    </div>
+  </footer>
+
+  <!-- 🧭 Interactive Client Scripts -->
+  <script>
+    const counterElement = document.getElementById("visitor_count_display");
+    const apiBaseUrl = import.meta.env.PUBLIC_API_URL;
+
+    if (counterElement && apiBaseUrl) {
+      console.log("🔗 Fetching views from:", apiBaseUrl);
+      fetch(`${apiBaseUrl}/count`, { method: "POST" })
+        .then((r) => r.json())
+        .then((data) => {
+          counterElement.innerText = data.count;
+        })
+        .catch((err) => {
+          console.error("⚠️ Failed to update views:", err);
+          counterElement.innerText = "Error";
+        });
+    } else {
+      console.warn("⚠️ API_URL lookup failed inside meta properties!");
+    }
+  </script>
+</Layout>

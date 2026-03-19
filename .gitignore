@@ -1,0 +1,13 @@
+.terraform/
+*.tfstate*
+.DS_Store
+
+# Python
+__pycache__/
+backend/__pycache__/
+.pytest_cache/
+.venv/
+
+# Environment Variables
+.env
+.env.*
