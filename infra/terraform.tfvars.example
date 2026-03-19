@@ -8,4 +8,4 @@ project_name = "cloud-resume-challenge"
 domain_name  = "atoumbre.me"
 
 # Cloudflare configuration
-cloudflare_zone_id = "8d5e85cac11bdc33d3fa21f66a176ab2"
+cloudflare_zone_id = "replace-with-your-cloudflare-zone-id"

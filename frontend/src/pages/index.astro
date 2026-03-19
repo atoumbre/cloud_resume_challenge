@@ -1,8 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro";
-
-// Visitor Counter Variable passed via static-bake or dynamically rendered
-const isProduction = import.meta.env.PROD;
 ---
 
 <Layout>
@@ -345,24 +342,21 @@ const isProduction = import.meta.env.PROD;
     </div>
   </footer>
 
-  <!-- 🧭 Interactive Client Scripts -->
   <script>
     const counterElement = document.getElementById("visitor_count_display");
     const apiBaseUrl = import.meta.env.PUBLIC_API_URL;
 
     if (counterElement && apiBaseUrl) {
-      console.log("🔗 Fetching views from:", apiBaseUrl);
       fetch(`${apiBaseUrl}/count`, { method: "POST" })
         .then((r) => r.json())
         .then((data) => {
           counterElement.innerText = data.count;
         })
-        .catch((err) => {
-          console.error("⚠️ Failed to update views:", err);
-          counterElement.innerText = "Error";
+        .catch(() => {
+          counterElement.innerText = "Unavailable";
         });
     } else {
-      console.warn("⚠️ API_URL lookup failed inside meta properties!");
+      counterElement?.replaceChildren("Offline");
     }
   </script>
 </Layout>

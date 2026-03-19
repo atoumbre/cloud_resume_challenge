@@ -1,13 +1,29 @@
 .terraform/
 *.tfstate*
+*.tfvars
+!infra/terraform.tfvars
+*.tfvars.json
+*.tfplan
 .DS_Store
+*.pyc
 
 # Python
 __pycache__/
 backend/__pycache__/
 .pytest_cache/
 .venv/
+backend/.pytest_cache/
+backend/.venv/
+backend/lambda.zip
 
 # Environment Variables
 .env
 .env.*
+
+# Frontend build artifacts
+frontend/.astro/
+frontend/dist/
+frontend/node_modules/
+
+# Generated infrastructure artifacts
+infra/modules/backend_api/lambda.zip

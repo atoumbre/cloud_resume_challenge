@@ -44,20 +44,21 @@ cloud_resume_challenge/
 │       ├── backend_api/         # Lambda, HTTP API, and DynamoDB resources
 │       ├── oidc/                # GitHub Actions OIDC provider and deploy role
 │       └── s3_cloudfront/       # S3 origin, CloudFront distribution, ACM, DNS
-└── deploy_local.py              # Optional local deploy helper aligned to Astro
+└── deploy_local.py              # Local deploy helper
 ```
 
 ## Deployment
 
-The primary deployment path is GitHub Actions via [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml). A push to `main` can apply Terraform, run backend tests, build the Astro frontend, publish the site to S3, and invalidate CloudFront.
+Pull requests are validated by [`.github/workflows/ci.yml`](./.github/workflows/ci.yml). Deployments happen through [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml) on pushes to `main`.
 
 ### CI/CD flow
 
-1. GitHub Actions assumes an AWS role using OIDC.
-2. Terraform applies infrastructure from [`infra/`](./infra).
-3. Backend tests run from [`backend/test_app.py`](./backend/test_app.py).
-4. The frontend builds with `PUBLIC_API_URL` set from Terraform outputs.
-5. The generated `frontend/dist/` assets are synced to S3 and CloudFront is invalidated.
+1. Pull requests run Terraform formatting and validation, backend tests, and the Astro production build.
+2. GitHub Actions uses the committed [`infra/terraform.tfvars`](./infra/terraform.tfvars) values and only injects secrets where needed.
+3. GitHub Actions assumes an AWS role using OIDC only for the deploy workflow on `main`.
+4. Terraform applies infrastructure from [`infra/`](./infra).
+5. The frontend builds with `PUBLIC_API_URL` set from Terraform outputs.
+6. The generated `frontend/dist/` assets are synced to S3 and CloudFront is invalidated.
 
 ### Optional local deploy helper
 
@@ -80,19 +81,24 @@ python3 deploy_local.py
 
 ### Terraform variables
 
-Commit `terraform.tfvars.example`, not live `terraform.tfvars`.
+This repository commits [`infra/terraform.tfvars`](./infra/terraform.tfvars) because it contains stable, non-secret project configuration. Keep only the Cloudflare API token out of source control.
 
 ```bash
-cp infra/terraform.tfvars.example infra/terraform.tfvars
 export TF_VAR_cloudflare_api_token="YOUR_CLOUDFLARE_API_TOKEN"
 ```
 
-The example file contains only non-secret defaults and repository-specific values.
+### GitHub Actions configuration
+
+Deploys require these repository secrets:
+
+- `AWS_ROLE_ARN`
+- `CLOUDFLARE_API_TOKEN`
 
 ## Testing
 
 Current automated checks in this repository are lightweight but real:
 
+- Pull request validation for Terraform formatting and validation
 - Backend unit tests with `pytest` and `moto`
 - Production frontend build with Astro
 - Deployment verification through Terraform outputs and the live site
@@ -100,8 +106,9 @@ Current automated checks in this repository are lightweight but real:
 Run the main checks locally:
 
 ```bash
-(cd backend && python3 -m pip install pytest moto boto3 && pytest test_app.py)
-(cd frontend && npm install && npm run build)
+(cd backend && python3 -m pip install -r requirements-dev.txt && pytest test_app.py)
+(cd frontend && npm ci && npm run build)
+(cd infra && terraform fmt -check -recursive && terraform init -backend=false && terraform validate)
 ```
 
 ## Key Engineering Decisions
@@ -120,7 +127,6 @@ Run the main checks locally:
 
 ## Future Improvements
 
-- Add `terraform fmt -check` and `terraform validate` to CI before `terraform apply`.
-- Split CI and CD so pull requests get plan/build/test feedback without applying infrastructure.
 - Add frontend smoke tests for the counter behavior against a deployed preview or local mock API.
 - Narrow the GitHub Actions deploy role permissions further as the infrastructure stabilizes.
+- Add a reusable GitHub Actions workflow to remove duplicated setup between CI and deploy jobs.

@@ -1,39 +1,68 @@
-name: CI/CD Pipeline
+name: Deploy
 
 on:
   push:
-    branches: [   main ]
+    branches: [main]
 
 jobs:
-  detect-changes:
+  verify:
     runs-on: ubuntu-latest
-    outputs:
-      infra: ${{ steps.filter.outputs.infra }}
-      backend: ${{ steps.filter.outputs.backend }}
-      frontend: ${{ steps.filter.outputs.frontend }}
+    env:
+      TF_VAR_cloudflare_api_token: validation-token
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Check file changes
-        id: filter
-        uses: dorny/paths-filter@v3
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Format Check
+        run: terraform -chdir=infra fmt -check -recursive
+
+      - name: Terraform Init
+        run: terraform -chdir=infra init -backend=false
+
+      - name: Terraform Validate
+        run: terraform -chdir=infra validate
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          filters: |
-            infra:
-              - 'infra/**'
-            backend:
-              - 'backend/**'
-            frontend:
-              - 'frontend/**'
+          python-version: "3.12"
+
+      - name: Install Backend Dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -r backend/requirements-dev.txt
+
+      - name: Run Backend Tests
+        env:
+          AWS_DEFAULT_REGION: us-east-1
+        run: pytest backend/test_app.py
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build Frontend
+        working-directory: frontend
+        env:
+          PUBLIC_API_URL: https://example.execute-api.us-east-1.amazonaws.com
+        run: npm run build
 
   infra:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.infra == 'true'
+    needs: verify
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
+    env:
+      TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -48,71 +77,13 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: cd infra && terraform init
+        run: terraform -chdir=infra init
 
       - name: Terraform Apply
-        env:
-          TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: |
-          cd infra
-          terraform apply -auto-approve
+        run: terraform -chdir=infra apply -auto-approve
 
   backend:
-    needs: [detect-changes, infra]
-    # Run if backend changed OR if infra deployed successfully. Skip if infra failed.
-    if: ${{ always() && needs.detect-changes.result == 'success' && needs.infra.result != 'failure' && (needs.detect-changes.outputs.backend == 'true' || needs.infra.result == 'success') }}
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Install dependencies
-        run: |
-          cd backend
-          python -m pip install --upgrade pip
-          pip install pytest moto boto3
-
-      - name: Run tests
-        env:
-          AWS_DEFAULT_REGION: us-east-1
-        run: |
-          cd backend
-          pytest test_app.py
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }} # Needs permission update function
-          aws-region: us-east-1
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Fetch Terraform Outputs
-        id: tf
-        run: |
-          cd infra
-          terraform init
-          echo "LAMBDA_NAME=$(terraform output -raw lambda_function_name)" >> $GITHUB_OUTPUT
-
-      - name: Deploy Backend (Update Lambda)
-        run: |
-          cd backend
-          zip -j lambda.zip app.py
-          aws lambda update-function-code --function-name ${{ steps.tf.outputs.LAMBDA_NAME }} --zip-file fileb://lambda.zip
-
-  frontend:
-    needs: [detect-changes, infra]
-    # Run if frontend changed OR if infra deployed successfully. Skip if infra failed.
-    if: ${{ always() && needs.detect-changes.result == 'success' && needs.infra.result != 'failure' && (needs.detect-changes.outputs.frontend == 'true' || needs.infra.result == 'success') }}
+    needs: infra
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -133,33 +104,61 @@ jobs:
       - name: Fetch Terraform Outputs
         id: tf
         run: |
-          cd infra
-          terraform init
-          echo "S3_BUCKET_NAME=$(terraform output -raw frontend_s3_bucket_name)" >> $GITHUB_OUTPUT
-          echo "CLOUDFRONT_DISTRIBUTION_ID=$(terraform output -raw cloudfront_distribution_id)" >> $GITHUB_OUTPUT
-          echo "API_ENDPOINT=$(terraform output -raw api_endpoint)" >> $GITHUB_OUTPUT
+          terraform -chdir=infra init
+          echo "LAMBDA_NAME=$(terraform -chdir=infra output -raw lambda_function_name)" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy Backend
+        working-directory: backend
+        run: |
+          zip -j lambda.zip app.py
+          aws lambda update-function-code --function-name "${{ steps.tf.outputs.LAMBDA_NAME }}" --zip-file fileb://lambda.zip
+
+  frontend:
+    needs: infra
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Fetch Terraform Outputs
+        id: tf
+        run: |
+          terraform -chdir=infra init
+          echo "S3_BUCKET_NAME=$(terraform -chdir=infra output -raw frontend_s3_bucket_name)" >> "$GITHUB_OUTPUT"
+          echo "CLOUDFRONT_DISTRIBUTION_ID=$(terraform -chdir=infra output -raw cloudfront_distribution_id)" >> "$GITHUB_OUTPUT"
+          echo "API_ENDPOINT=$(terraform -chdir=infra output -raw api_endpoint)" >> "$GITHUB_OUTPUT"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install Frontend Dependencies
-        run: |
-          cd frontend
-          npm install
+        working-directory: frontend
+        run: npm ci
 
-      - name: Build Frontend (Astro)
+      - name: Build Frontend
+        working-directory: frontend
         env:
           PUBLIC_API_URL: ${{ steps.tf.outputs.API_ENDPOINT }}
-        run: |
-          cd frontend
-          npm run build
+        run: npm run build
 
       - name: Sync Frontend to S3
-        run: |
-          aws s3 sync frontend/dist/ s3://${{ steps.tf.outputs.S3_BUCKET_NAME }} --delete
+        run: aws s3 sync frontend/dist/ "s3://${{ steps.tf.outputs.S3_BUCKET_NAME }}" --delete
 
       - name: Invalidate CloudFront Cache
-        run: |
-          aws cloudfront create-invalidation --distribution-id ${{ steps.tf.outputs.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id "${{ steps.tf.outputs.CLOUDFRONT_DISTRIBUTION_ID }}" --paths "/*"
