@@ -1,0 +1,267 @@
+{
+  "site": {
+    "name": "Atoumbré Kouassi",
+    "headline": "Cloud engineer and software systems builder"
+  },
+  "hero": {
+    "intro": "I design cloud infrastructure, observability platforms, and production-style software systems with AWS, Terraform, GitHub Actions, Python, and OpenTelemetry.",
+    "primaryActions": [
+      {
+        "label": "View Projects",
+        "href": "#projects",
+        "kind": "primary"
+      },
+      {
+        "label": "Contact",
+        "href": "#contact",
+        "kind": "secondary"
+      }
+    ],
+    "socialLinks": [
+      {
+        "label": "Peerlist",
+        "href": "https://peerlist.io/atoumbre"
+      },
+      {
+        "label": "Credly",
+        "href": "https://www.credly.com/users/atoumbre-kouassi/"
+      },
+      {
+        "label": "LinkedIn",
+        "href": "https://www.linkedin.com/in/atoumbre/"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com/atoumbre"
+      },
+      {
+        "label": "Email",
+        "href": "mailto:atoumbre@gmail.com"
+      }
+    ]
+  },
+  "proofPoints": [
+    "17+ years of experience across IT, networks, data, and software",
+    "Currently building Grafana Cloud onboarding automation at Kauris",
+    "AWS Certified Solutions Architect - Associate",
+    "Hands-on with AWS, Terraform, GitHub Actions, Python, TypeScript, Dart, and Flutter"
+  ],
+  "projectsIntro": "Selected work across cloud infrastructure, observability, backend systems, and developer tooling.",
+  "projects": [
+    {
+      "name": "Cloud Resume Challenge",
+      "summary": "A production-style personal platform built with Terraform, AWS, Astro, serverless backend components, and GitHub Actions using OIDC.",
+      "featured": true,
+      "featuredNote": "This portfolio site is built and deployed from this project.",
+      "links": [
+        {
+          "label": "Live Site",
+          "href": "https://atoumbre.me",
+          "kind": "primary"
+        },
+        {
+          "label": "Repository",
+          "href": "https://github.com/atoumbre/cloud_resume_challenge",
+          "kind": "secondary"
+        }
+      ],
+      "stack": [
+        "AWS",
+        "Terraform",
+        "Astro",
+        "Python",
+        "GitHub Actions"
+      ]
+    },
+    {
+      "name": "Weft Backend Services",
+      "summary": "A production-oriented backend services monorepo focused on workload decomposition, event-driven processing, and time-sensitive protocol operations.",
+      "links": [
+        {
+          "label": "Repository",
+          "href": "https://github.com/atoumbre/weft-backend-services",
+          "kind": "secondary"
+        }
+      ],
+      "stack": [
+        "TypeScript",
+        "Bun",
+        "Backend Services",
+        "Event-Driven Systems"
+      ]
+    },
+    {
+      "name": "Weft Backend Resources",
+      "summary": "Terraform-managed AWS infrastructure for backend workloads, supporting a production-style environment with shared cloud resources, deployment primitives, and operational controls.",
+      "links": [
+        {
+          "label": "Repository",
+          "href": "https://github.com/atoumbre/weft-backend-resources",
+          "kind": "secondary"
+        }
+      ],
+      "stack": [
+        "Terraform",
+        "AWS",
+        "Infrastructure as Code",
+        "Platform Resources"
+      ]
+    },
+    {
+      "name": "Levit",
+      "summary": "A deterministic reactive architecture library for Dart and Flutter that explores application state, dependency flow, and developer ergonomics.",
+      "links": [
+        {
+          "label": "Repository",
+          "href": "https://github.com/atoumbre/levit",
+          "kind": "secondary"
+        }
+      ],
+      "stack": [
+        "Dart",
+        "Flutter",
+        "Reactive Architecture",
+        "Developer Tooling"
+      ]
+    },
+    {
+      "name": "Grafana Cloud Onboarding Automation",
+      "hide": true,
+      "summary": "An onboarding solution for automating Grafana Cloud environment enrollment, folder hierarchies, and observability setup using Terraform and OpenTelemetry.",
+      "stack": [
+        "Terraform",
+        "Grafana Cloud",
+        "OpenTelemetry",
+        "GitHub Actions"
+      ]
+    },
+    {
+      "name": "Observability Stack",
+      "hide": true,
+      "summary": "A local observability platform wiring Grafana, Prometheus, Loki, Tempo, and OpenTelemetry collectors around a sample application to validate end-to-end telemetry flows.",
+      "stack": [
+        "Grafana",
+        "Prometheus",
+        "Loki",
+        "Tempo",
+        "OpenTelemetry",
+        "Docker"
+      ]
+    }
+  ],
+  "about": {
+    "body": "My background spans service delivery, network systems, data engineering, and software development. That range gives me a practical engineering mindset: I care about reliability, automation, visibility, and systems that teams can actually operate.",
+    "whatIBuild": {
+      "body": "I build systems that need to be shipped, observed, and operated cleanly across infrastructure, software, and delivery workflows.",
+      "areas": [
+        "Terraform-managed AWS infrastructure and deployment pipelines",
+        "Observability foundations with Grafana and OpenTelemetry",
+        "Backend services and developer tooling for maintainable systems"
+      ]
+    },
+    "focus": "Today I focus on cloud platforms and observability, building tooling and infrastructure that reduce onboarding time, standardize telemetry, and improve operational confidence."
+  },
+  "experienceHighlights": [
+    {
+      "role": "Cloud Engineer (Intern)",
+      "company": "Kauris",
+      "companyUrl": "https://kauris.ca",
+      "period": "Dec 2025 - Present",
+      "summary": "Building automation for Grafana Cloud onboarding and observability standardization with Terraform and OpenTelemetry."
+    },
+    {
+      "role": "Data Engineer",
+      "company": "Aviat Networks",
+      "companyUrl": "https://www.aviatnetworks.com",
+      "period": "Mar 2025 - Dec 2025",
+      "summary": "Used SQL, Athena, Python, and Power BI to improve reporting, governance, and operational decision support, contributing to measurable improvements in service opportunities and lead times."
+    },
+    {
+      "role": "Service Delivery Manager",
+      "company": "Aviat Networks",
+      "companyUrl": "https://www.aviatnetworks.com",
+      "period": "Sep 2015 - Feb 2025",
+      "summary": "Led service delivery for telecom operators across West and Central Africa, with responsibility for SLA performance, operational process improvement, and customer-facing delivery."
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "Cloud and IaC",
+      "items": [
+        "AWS",
+        "Terraform",
+        "GitHub",
+        "GitHub Actions"
+      ]
+    },
+    {
+      "name": "Observability",
+      "items": [
+        "Grafana",
+        "OpenTelemetry"
+      ]
+    },
+    {
+      "name": "Software and Backend",
+      "items": [
+        "Python",
+        "TypeScript",
+        "Rust"
+      ]
+    },
+    {
+      "name": "Frontend and Apps",
+      "items": [
+        "Svelte",
+        "Dart",
+        "Flutter"
+      ]
+    },
+    {
+      "name": "Data and Analytics",
+      "items": [
+        "SQL",
+        "Power BI",
+        "Excel"
+      ]
+    },
+    {
+      "name": "Service Management",
+      "items": [
+        "Service Delivery",
+        "SLA Management",
+        "Operational Governance",
+        "Customer-Facing Delivery"
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "AWS Certified Solutions Architect - Associate",
+      "issuer": "Amazon Web Services Training and Certification",
+      "issued": "December 15, 2025",
+      "expires": "December 15, 2028"
+    }
+  ],
+  "contact": {
+    "email": "atoumbre@gmail.com",
+    "profiles": [
+      {
+        "label": "Peerlist",
+        "href": "https://peerlist.io/atoumbre"
+      },
+      {
+        "label": "Credly",
+        "href": "https://www.credly.com/users/atoumbre-kouassi/"
+      },
+      {
+        "label": "LinkedIn",
+        "href": "https://www.linkedin.com/in/atoumbre/"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com/atoumbre"
+      }
+    ]
+  }
+}

@@ -1,5 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import portfolio from "../content/portfolio-content.json";
+
+const projectLinkClass = (kind = "secondary") =>
+  kind === "primary"
+    ? "inline-flex items-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary/90"
+    : "inline-flex items-center rounded-full border border-zinc-700 px-4 py-2 text-sm font-semibold text-neutral-200 transition-colors hover:border-neutral-500 hover:text-white";
+
+const profileLinkClass =
+  "inline-flex items-center rounded-full border border-zinc-700 bg-zinc-800/60 px-4 py-2 text-sm font-semibold text-neutral-200 transition-colors hover:border-primary/50 hover:text-white hover:bg-zinc-800";
 ---
 
 <Layout>
@@ -59,314 +68,260 @@ import Layout from "../layouts/Layout.astro";
   </div>
 
   <main class="max-w-5xl mx-auto px-6 pb-24 space-y-20 mt-12">
-    <!-- 🦸 Hero Section -->
     <section class="hero text-center py-10">
       <div class="hero-content flex-col">
-        <!-- Profile Frame -->
         <div class="avatar online">
           <div
             class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 shadow-2xl"
           >
-            <!-- Using local or standard default avatar since asset is downloaded natively -->
-            <img src="/photo.jpeg" alt="Atoumbré Avatar" />
+            <img src="/photo.jpeg" alt={`${portfolio.site.name} avatar`} />
           </div>
         </div>
-        <div class="max-w-xl">
+        <div class="max-w-3xl">
           <h1
             class="text-5xl font-extrabold tracking-tight text-white mt-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
           >
-            Atoumbré Kouassi
+            {portfolio.site.name}
           </h1>
-          <p class="text-xl text-neutral-400 font-semibold mt-2">
-            Cloud and Software Solution Builder
+          <p class="text-xl text-neutral-300 font-semibold mt-3">
+            {portfolio.site.headline}
           </p>
-          <p class="text-sm text-neutral-500 mt-1">
-            Former IT Service Manager • 17+ Years Exp.
+          <p class="text-base text-neutral-400 mt-5 max-w-2xl mx-auto leading-relaxed">
+            {portfolio.hero.intro}
           </p>
-
-          <!-- CTA Buttons -->
-          <div class="flex flex-wrap gap-3 justify-center mt-6">
-            <a
-              href="https://peerlist.io/atoumbre"
-              target="_blank"
-              rel="noreferrer"
-              class="btn btn-primary btn-sm rounded-lg shadow-lg"
-              >Peerlist Profile</a
-            >
-            <a
-              href="https://www.linkedin.com/in/atoumbre/"
-              target="_blank"
-              rel="noreferrer"
-              class="btn btn-outline btn-sm rounded-lg border-neutral-600 text-neutral-300 hover:bg-white hover:text-black hover:border-white transition-all duration-300 gap-2 flex items-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  d="M6.94 8.5A1.56 1.56 0 1 1 6.93 5.4a1.56 1.56 0 0 1 .01 3.1ZM5.6 9.67h2.67v8.58H5.6V9.67Zm4.34 0h2.56v1.17h.04c.36-.68 1.23-1.4 2.54-1.4 2.72 0 3.22 1.79 3.22 4.12v4.69h-2.67v-4.16c0-.99-.02-2.27-1.38-2.27-1.38 0-1.59 1.08-1.59 2.2v4.23H9.94V9.67Z"
-                ></path>
-              </svg>
-              LinkedIn
-            </a>
-            <a
-              href="https://github.com/atoumbre"
-              target="_blank"
-              rel="noreferrer"
-              class="btn btn-outline btn-sm rounded-lg border-neutral-600 text-neutral-300 hover:bg-white hover:text-black hover:border-white transition-all duration-300 gap-2 flex items-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  d="M12 .5C5.65.5.5 5.65.5 12A11.5 11.5 0 0 0 8.36 22.9c.58.11.79-.25.79-.56v-2.17c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.35.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.27-5.23-5.66 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.47.11-3.06 0 0 .96-.31 3.14 1.17A10.9 10.9 0 0 1 12 6.03c.97 0 1.95.13 2.86.38 2.18-1.48 3.14-1.17 3.14-1.17.62 1.59.23 2.77.11 3.06.73.8 1.18 1.82 1.18 3.07 0 4.4-2.69 5.36-5.25 5.65.41.35.78 1.03.78 2.08v3.08c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"
-                ></path>
-              </svg>
-              GitHub
-            </a>
-            <a
-              href="mailto:atoumbre@gmail.com"
-              class="btn btn-outline btn-sm rounded-lg border-neutral-600 text-neutral-300 hover:bg-white hover:text-black hover:border-white transition-all duration-300 gap-2 flex items-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                ></path>
-              </svg>
-              Contact Me
-            </a>
-          </div>
         </div>
       </div>
     </section>
 
-    <!-- 🛠️ Skills Section -->
     <section>
-      <h2
-        class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2"
-      >
-        Technical Skills & Arsenal
-      </h2>
-      <div class="flex flex-wrap gap-2">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-white text-2xl">About Me</h2>
+            <p class="text-neutral-400 leading-relaxed">{portfolio.about.body}</p>
+          </div>
+        </article>
+        <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-white text-2xl">Current Focus</h2>
+            <p class="text-neutral-400 leading-relaxed">{portfolio.about.focus}</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {
-          [
-            "AWS",
-            "Terraform",
-            "GitHub",
-            "Actions",
-            "TypeScript",
-            "Rust",
-            "Python",
-            "Grafana",
-            "OpenTelemetry",
-            "SQL",
-            "PowerBI",
-            "Svelte",
-            "Dart",
-            "Flutter",
-          ].map((skill) => (
-            <div class="badge badge-lg badge-neutral bg-zinc-800/80 hover:bg-zinc-700 transition-all font-semibold rounded-md border border-zinc-700/50">
-              {skill}
+          portfolio.proofPoints.map((point) => (
+            <div class="card bg-zinc-900/55 border border-neutral-800/80 rounded-xl shadow-lg">
+              <div class="card-body">
+                <p class="text-sm text-neutral-300 leading-relaxed">{point}</p>
+              </div>
             </div>
           ))
         }
       </div>
     </section>
 
-    <!-- 💼 Experience timeline -->
-    <section>
-      <h2
-        class="text-2xl font-bold text-white mb-8 border-b border-neutral-800 pb-2"
-      >
-        Professional Experience
+    <section id="projects">
+      <h2 class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2">
+        Selected Projects
       </h2>
-      <ul
-        class="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical"
-      >
-        <!-- 1. Kauris -->
-        <li>
-          <div class="timeline-middle text-primary">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              ><path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"></path></svg
+      <p class="max-w-3xl text-neutral-400 leading-relaxed mb-8">
+        {portfolio.projectsIntro}
+      </p>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        {
+          portfolio.projects.filter((project) => !project.hide).map((project) => (
+            <article
+              class:list={[
+                "card rounded-xl shadow-xl transition-all",
+                project.featured
+                  ? "bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-950 border border-primary/30 hover:border-primary/50 lg:col-span-3"
+                  : "bg-zinc-900 border border-neutral-800 hover:border-neutral-700",
+              ]}
             >
-          </div>
-          <div class="timeline-start md:text-end mb-10 mr-4">
-            <time class="font-mono italic text-neutral-500"
-              >Dec 2025 - Present</time
-            >
-            <div class="text-lg font-bold text-white">
-              Cloud Engineer (Intern)
-            </div>
-            <div class="text-sm text-primary font-semibold">
-              Kauris • Canada
-            </div>
-            <p class="text-neutral-400 mt-2 text-sm leading-relaxed">
-              Automating Grafana Cloud environments enrollment. Leveraged
-              Terraform, OpenTelemetry and Grafana to standardize full
-              observability stack rollouts for engineering teams.
-            </p>
-          </div>
-          <hr class="bg-blue-500" />
-        </li>
-
-        <!-- 2. Aviat Networks - Data Engineer -->
-        <li>
-          <hr class="bg-blue-500" />
-          <div class="timeline-middle text-primary">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              ><path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"></path></svg
-            >
-          </div>
-          <div class="timeline-end mb-10 ml-4">
-            <time class="font-mono italic text-neutral-500"
-              >Mar 2025 - Dec 2025</time
-            >
-            <div class="text-lg font-bold text-white">Data Engineer</div>
-            <div class="text-sm text-primary font-semibold">
-              Aviat Networks • Côte d'Ivoire
-            </div>
-            <p class="text-neutral-400 mt-2 text-sm leading-relaxed">
-              Analyzed operational nodes (SQL/Athena) lifting proactive scaling
-              opportunities by 50%. Built governance dashboard flows mapping
-              60k+ critical KPIs reducing field deployment latency weights.
-            </p>
-          </div>
-          <hr />
-        </li>
-
-        <!-- 3. Aviat Networks - SDM -->
-        <li>
-          <hr />
-          <div class="timeline-middle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              ><path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"></path></svg
-            >
-          </div>
-          <div class="timeline-start md:text-end mb-10 mr-4">
-            <time class="font-mono italic text-neutral-500"
-              >Sep 2015 - Feb 2025</time
-            >
-            <div class="text-lg font-bold text-white">
-              Service Delivery Manager
-            </div>
-            <div class="text-sm text-primary font-semibold">
-              Aviat Networks (French WECA)
-            </div>
-            <p class="text-neutral-400 mt-2 text-sm leading-relaxed">
-              Ensured strict SLA compliance for top-tier telecom carriers across
-              West and Central Africa maximizing contract margins through direct
-              performance optimization loops.
-            </p>
-          </div>
-          <hr />
-        </li>
-
-        <!-- 4. Numerics -->
-        <li>
-          <hr />
-          <div class="timeline-middle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              ><path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"></path></svg
-            >
-          </div>
-          <div class="timeline-end mb-4 ml-4">
-            <time class="font-mono italic text-neutral-500"
-              >May 2005 - Aug 2006</time
-            >
-            <div class="text-lg font-bold text-white">
-              Software Engineering Team Leader
-            </div>
-            <div class="text-sm text-primary font-semibold">
-              Numerics (IT Cabinet)
-            </div>
-            <p class="text-neutral-400 mt-2 text-sm leading-relaxed">
-              Built scalable HR payroll logic backbones covering 20,000+ total
-              ledger integrations, expanding banking asset validations across
-              domestic bureaus efficiently.
-            </p>
-          </div>
-        </li>
-      </ul>
+              <div class="card-body">
+                {
+                  project.featured && (
+                    <p class="text-xs uppercase tracking-[0.24em] text-primary/80">
+                      Featured Project
+                    </p>
+                  )
+                }
+                {
+                  project.featuredNote && (
+                    <p class="mt-2 text-sm font-semibold text-primary">
+                      {project.featuredNote}
+                    </p>
+                  )
+                }
+                <h3
+                  class:list={[
+                    "card-title text-white",
+                    project.featured ? "text-2xl mt-2" : "text-xl",
+                  ]}
+                >
+                  {project.name}
+                </h3>
+                <p
+                  class:list={[
+                    "text-neutral-400 leading-relaxed",
+                    project.featured ? "text-base" : "text-sm",
+                  ]}
+                >
+                  {project.summary}
+                </p>
+                <div class="flex flex-wrap gap-2 mt-3">
+                  {project.stack.map((item) => (
+                    <span class="badge badge-neutral bg-zinc-800/80 border border-zinc-700/50 rounded-md font-semibold">
+                      {item}
+                    </span>
+                  ))}
+                </div>
+                {project.links && (
+                  <div class="mt-5 flex flex-wrap gap-3">
+                    {project.links.map((link) => (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        class={projectLinkClass(link.kind)}
+                      >
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </article>
+          ))
+        }
+      </div>
     </section>
 
-    <!-- 🎓 Education Section -->
     <section>
-      <h2
-        class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2"
-      >
-        Education & Growth
+      <h2 class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2">
+        Experience Highlights
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div
-          class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl hover:border-neutral-700 transition-all"
-        >
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        {
+          portfolio.experienceHighlights.map((item) => (
+            <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl hover:border-neutral-700 transition-all">
+              <div class="card-body">
+                <p class="text-xs uppercase tracking-[0.24em] text-neutral-500">
+                  {item.period}
+                </p>
+                <h3 class="card-title text-white text-xl">{item.role}</h3>
+                {
+                  item.companyUrl ? (
+                    <a
+                      href={item.companyUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="text-sm font-semibold text-primary hover:text-white transition-colors"
+                    >
+                      {item.company}
+                    </a>
+                  ) : (
+                    <p class="text-sm font-semibold text-primary">{item.company}</p>
+                  )
+                }
+                <p class="text-sm text-neutral-400 leading-relaxed">
+                  {item.summary}
+                </p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2">
+        Capabilities
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {
+          portfolio.capabilities.map((group) => (
+            <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl hover:border-neutral-700 transition-all">
+              <div class="card-body">
+                <h3 class="card-title text-white text-xl">{group.name}</h3>
+                <div class="flex flex-wrap gap-2 mt-2">
+                  {group.items.map((item) => (
+                    <span class="badge badge-lg badge-neutral bg-zinc-800/80 hover:bg-zinc-700 transition-all font-semibold rounded-md border border-zinc-700/50">
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2">
+        Certification
+      </h2>
+      <div class="grid grid-cols-1 gap-5">
+        {
+          portfolio.certifications.map((certification) => (
+            <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl hover:border-neutral-700 transition-all">
+              <div class="card-body">
+                <h3 class="card-title text-white text-xl">{certification.name}</h3>
+                <p class="text-sm font-semibold text-primary">
+                  {certification.issuer}
+                </p>
+                <p class="text-sm text-neutral-400">
+                  Issued {certification.issued} • Expires {certification.expires}
+                </p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2 class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2">
+        Contact
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl">
           <div class="card-body">
-            <h3 class="card-title text-white">Master of Science (MS)</h3>
-            <p class="text-xs text-primary font-mono">
-              Statistics & Economics Engineering
+            <p class="text-sm uppercase tracking-[0.24em] text-neutral-500">
+              Email
             </p>
-            <p class="text-sm text-neutral-400">
-              École Nationale de Statistique et d'Économie Appliquée
-            </p>
+            <a
+              href={`mailto:${portfolio.contact.email}`}
+              class="text-lg font-semibold text-white hover:text-primary transition-colors"
+            >
+              {portfolio.contact.email}
+            </a>
           </div>
-        </div>
-        <div
-          class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl hover:border-neutral-700 transition-all"
-        >
+        </article>
+        <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl">
           <div class="card-body">
-            <h3 class="card-title text-white">
-              Bachelor of Engineering (BEng)
-            </h3>
-            <p class="text-xs text-primary font-mono">Electrical Engineering</p>
-            <p class="text-sm text-neutral-400">
-              Institut National Polytechnique Félix HOUPHOUËT-BOIGNY
+            <p class="text-sm uppercase tracking-[0.24em] text-neutral-500">
+              Profiles
             </p>
+            <div class="flex flex-wrap gap-3 mt-3">
+              {portfolio.contact.profiles.map((profile) => (
+                <a
+                  href={profile.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  class={profileLinkClass}
+                >
+                  {profile.label}
+                </a>
+              ))}
+            </div>
           </div>
-        </div>
+        </article>
       </div>
     </section>
   </main>
@@ -376,12 +331,28 @@ import Layout from "../layouts/Layout.astro";
     class="footer footer-center p-10 bg-neutral-900/50 backdrop-blur-md text-neutral-500 border-t border-neutral-800 mt-20"
   >
     <div>
-      <p class="font-bold tracking-wide">Atoumbré Kouassi &copy; 2026</p>
-      <p class="text-sm mt-1">Built with Astro + DaisyUI + AWS CloudFront</p>
+      <p class="font-bold tracking-wide">{portfolio.site.name} &copy; 2026</p>
     </div>
   </footer>
 
   <script>
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+
+    const navigationEntry = performance.getEntriesByType("navigation")[0];
+    const isReload = navigationEntry?.type === "reload";
+
+    if (isReload) {
+      if (window.location.hash) {
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
+
+      requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+      });
+    }
+
     const counterElement = document.getElementById("visitor_count_display");
     const apiBaseUrl = import.meta.env.PUBLIC_API_URL;
 
