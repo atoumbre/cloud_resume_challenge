@@ -1,6 +1,8 @@
 name: Pull Request Validation
 
 on:
+  push:
+    branches: [dev]
   pull_request:
     branches: [main]
 
