@@ -74,6 +74,7 @@ resource "aws_iam_policy" "github_deploy_policy" {
           "cloudfront:DeleteDistribution",
           "cloudfront:GetInvalidation",
           "cloudfront:ListDistributions",
+          "cloudfront:ListTagsForResource",
           "cloudfront:TagResource",
           "cloudfront:CreateOriginAccessControl",
           "cloudfront:GetOriginAccessControl",
