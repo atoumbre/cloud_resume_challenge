@@ -4,6 +4,8 @@ Production-style cloud portfolio project showing how I build and operate a small
 
 Live site: [atoumbre.me](https://atoumbre.me)
 
+![Cloud Resume landing page preview](./docs/cloud-resume-preview.png)
+
 ## What This Repository Demonstrates
 
 - Infrastructure as Code with reusable Terraform modules
