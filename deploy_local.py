@@ -1,122 +1,138 @@
 #!/usr/bin/env python3
 """
-Local Deployment Script for Cloud Resume Challenge
-Automates Infra provision, API URL injection, and Frontend asset sync using Python.
+Optional local deployment helper for the Cloud Resume Challenge.
+
+This script mirrors the current repo flow:
+1. Apply Terraform from infra/
+2. Read Terraform outputs
+3. Build the Astro frontend with PUBLIC_API_URL
+4. Sync frontend/dist/ to the provisioned S3 bucket
+5. Invalidate the CloudFront distribution
 """
 
-import os
-import sys
+from __future__ import annotations
+
 import json
+import os
+import shutil
 import subprocess
+import sys
+from pathlib import Path
 
-# 1. Load Local .env Support (Saves Pip Install dependencies)
-def load_env():
-    """Manual parser to source bash-style .env parameters into the os environment."""
-    env_path = os.path.join(os.getcwd(), '.env')
-    if os.path.exists(env_path):
-        print("💡 Sourcing local .env file...")
-        with open(env_path, 'r') as f:
-            for line in f:
-                line = line.strip()
-                if not line or line.startswith('#'):
-                    continue
-                if line.startswith('export '):
-                    line = line[7:]
-                if '=' in line:
-                    key, value = line.split('=', 1)
-                    os.environ[key.strip()] = value.strip('"\' ')
 
-# 2. Command Runner Wrapper (Strict execution like set -e)
-def run_command(cmd, cwd=None, capture=False):
-    """Wrapper to run a list execution process and handle error states raising."""
-    try:
-        if capture:
-            result = subprocess.run(cmd, cwd=cwd, check=True, text=True, capture_output=True)
-            return result.stdout.strip()
-        else:
-            subprocess.run(cmd, cwd=cwd, check=True)
-            return ""
-    except subprocess.CalledProcessError as e:
-        print(f"❌ Error executing: {' '.join(cmd)}")
-        if getattr(e, 'stderr', None):
-            print(f"Details:\n{e.stderr}")
+ROOT = Path(__file__).resolve().parent
+INFRA_DIR = ROOT / "infra"
+FRONTEND_DIR = ROOT / "frontend"
+ENV_FILE = ROOT / ".env"
+
+
+def load_env_file() -> None:
+    """Load simple KEY=VALUE pairs from a local .env file if present."""
+    if not ENV_FILE.exists():
+        return
+
+    print(f"Loading environment from {ENV_FILE}")
+    for raw_line in ENV_FILE.read_text().splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("export "):
+            line = line[7:]
+        if "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        os.environ[key.strip()] = value.strip().strip("\"'")
+
+
+def require_tools(*tool_names: str) -> None:
+    missing = [tool for tool in tool_names if shutil.which(tool) is None]
+    if missing:
+        print(f"Missing required tools: {', '.join(missing)}", file=sys.stderr)
         sys.exit(1)
 
-def main():
-    load_env()
-    print("🚀 Starting Local Deployment via Python...")
 
-    # 1. AWS Credentials Verification
-    print("\n----------------------------------------")
-    print("Checking AWS Authorization...")
-    print("----------------------------------------")
+def run_command(
+    cmd: list[str],
+    *,
+    cwd: Path | None = None,
+    capture: bool = False,
+    env: dict[str, str] | None = None,
+) -> str:
+    try:
+        result = subprocess.run(
+            cmd,
+            cwd=str(cwd) if cwd else None,
+            check=True,
+            text=True,
+            capture_output=capture,
+            env=env,
+        )
+    except subprocess.CalledProcessError as exc:
+        print(f"Command failed: {' '.join(cmd)}", file=sys.stderr)
+        if exc.stderr:
+            print(exc.stderr, file=sys.stderr)
+        sys.exit(exc.returncode)
+
+    return result.stdout.strip() if capture else ""
+
+
+def terraform_outputs() -> dict[str, object]:
+    output = run_command(["terraform", "output", "-json"], cwd=INFRA_DIR, capture=True)
+    return json.loads(output)
+
+
+def main() -> None:
+    load_env_file()
+    require_tools("aws", "terraform", "npm", "python3")
+
+    print("Checking AWS caller identity")
     run_command(["aws", "sts", "get-caller-identity"], capture=True)
 
-    infra_dir = os.path.join(os.getcwd(), "infra")
+    print("Initializing Terraform")
+    run_command(["terraform", "init", "-input=false"], cwd=INFRA_DIR)
 
-    # 2. Provision Infrastructure (Terraform)
-    print("\n----------------------------------------")
-    print("📦 1. Provisioning AWS Infrastructure...")
-    print("----------------------------------------")
-    print("Initializing Terraform...")
-    run_command(["terraform", "init", "-input=false"], cwd=infra_dir)
+    print("Applying Terraform")
+    run_command(["terraform", "apply", "-auto-approve", "-input=false"], cwd=INFRA_DIR)
 
-    print("Applying Terraform configuration...")
-    run_command(["terraform", "apply", "-auto-approve", "-input=false"], cwd=infra_dir)
+    outputs = terraform_outputs()
+    frontend_bucket = outputs["frontend_s3_bucket_name"]["value"]
+    api_endpoint = outputs["api_endpoint"]["value"]
+    distribution_id = outputs["cloudfront_distribution_id"]["value"]
+    website_url = outputs.get("website_url", {}).get("value")
 
-    # Extract useful outputs via JSON for 100% precision
-    print("\n🔍 Extracting live endpoints...")
-    output_res = run_command(["terraform", "output", "-json"], cwd=infra_dir, capture=True)
-    outputs = json.loads(output_res)
+    print("Installing frontend dependencies")
+    run_command(["npm", "install"], cwd=FRONTEND_DIR)
 
-    try:
-        frontend_bucket = outputs["frontend_s3_bucket_name"]["value"]
-        api = outputs["api_endpoint"]["value"]
-        distribution_id = outputs["cloudfront_distribution_id"]["value"]
-    except KeyError as e:
-        print(f"❌ Error: Missing expected Terraform output: {e}")
-        sys.exit(1)
+    print("Building Astro frontend")
+    frontend_env = os.environ.copy()
+    frontend_env["PUBLIC_API_URL"] = str(api_endpoint)
+    run_command(["npm", "run", "build"], cwd=FRONTEND_DIR, env=frontend_env)
 
-    # 3. Update Frontend API Endpoint in main.js
-    print("\n----------------------------------------")
-    print("🔧 2. Updating Frontend API Gateway URL...")
-    print("----------------------------------------")
-    js_path = os.path.join(os.getcwd(), "frontend", "main.js")
-    
-    with open(js_path, 'r') as f:
-        lines = f.readlines()
+    print(f"Syncing frontend/dist to s3://{frontend_bucket}")
+    run_command(
+        ["aws", "s3", "sync", "dist/", f"s3://{frontend_bucket}", "--delete"],
+        cwd=FRONTEND_DIR,
+    )
 
-    output_lines = []
-    for line in lines:
-        if line.strip().startswith('const API_URL ='):
-            output_lines.append(f'const API_URL = "{api}/count";\n')
-        else:
-            output_lines.append(line)
+    print(f"Invalidating CloudFront distribution {distribution_id}")
+    run_command(
+        [
+            "aws",
+            "cloudfront",
+            "create-invalidation",
+            "--distribution-id",
+            str(distribution_id),
+            "--paths",
+            "/*",
+        ],
+        capture=True,
+    )
 
-    with open(js_path, 'w') as f:
-        f.writelines(output_lines)
-    print("✅ API URL successfully injected into main.js")
+    print("Local deployment complete")
+    print(f"API endpoint: {api_endpoint}")
+    if website_url:
+        print(f"Website URL: {website_url}")
 
-    # 4. Deploy Frontend to S3
-    print("\n----------------------------------------")
-    print("📤 3. Syncing Static Website to S3...")
-    print("----------------------------------------")
-    print(f"Syncing paths to Bucket: {frontend_bucket}")
-    run_command(["aws", "s3", "sync", "frontend/", f"s3://{frontend_bucket}", "--delete"])
-
-    # 5. Invalidate CloudFront Cache
-    print("\n----------------------------------------")
-    print("⚡ 4. Invalidating CloudFront Cache Distribution...")
-    print("----------------------------------------")
-    print(f"Submitting invalidation for {distribution_id}...")
-    run_command(["aws", "cloudfront", "create-invalidation", "--distribution-id", distribution_id, "--paths", "/*"], capture=True)
-    print("✅ Invalidation submitted.")
-
-    print("\n----------------------------------------")
-    print("🎉 Local Deployment Complete!")
-    print("----------------------------------------")
-    print(f"📍 API endpoint: {api}")
-    print(f"📍 S3 Bucket:    {frontend_bucket}")
 
 if __name__ == "__main__":
     main()
