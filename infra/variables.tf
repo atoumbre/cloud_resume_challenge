@@ -1,16 +1,4 @@
 
-# GitHub OIDC Configuration (Required for role scoping)
-
-variable "github_org" {
-  description = "GitHub username or organization name"
-  type        = string
-}
-
-variable "github_repo" {
-  description = "GitHub repository name"
-  type        = string
-}
-
 # AWS Configuration
 
 variable "aws_region" {
@@ -27,6 +15,8 @@ variable "domain_name" {
   description = "Custom domain name (optional)"
   type        = string
 }
+
+# Cloudflare Configuration
 
 variable "cloudflare_api_token" {
   description = "Cloudflare API Token for DNS Automation"

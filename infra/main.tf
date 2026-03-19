@@ -33,13 +33,3 @@ module "backend" {
   source       = "./modules/backend_api"
   project_name = var.project_name
 }
-
-module "oidc" {
-  source         = "./modules/oidc"
-  project_name   = var.project_name
-  github_org     = var.github_org
-  github_repo    = var.github_repo
-  s3_bucket_arn  = module.frontend.bucket_arn
-  cloudfront_arn = module.frontend.cloudfront_arn
-  lambda_arn     = module.backend.lambda_function_arn
-}

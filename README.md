@@ -36,20 +36,32 @@ flowchart LR
 
 ```text
 cloud_resume_challenge/
+├── infra-bootstrap/             # First-run local Terraform root (OIDC + GitHub repo vars)
 ├── frontend/                    # Astro frontend
 ├── backend/                     # Lambda handler and backend tests
-├── infra/
+├── infra/                       # Main application infrastructure root
 │   ├── main.tf                  # Root Terraform composition
 │   ├── variables.tf             # Root input variables
 │   ├── outputs.tf               # Deployment outputs
 │   └── modules/
 │       ├── backend_api/         # Lambda, HTTP API, and DynamoDB resources
-│       ├── oidc/                # GitHub Actions OIDC provider and deploy role
 │       └── s3_cloudfront/       # S3 origin, CloudFront distribution, ACM, DNS
+├── infra-bootstrap/modules/
+│   └── oidc/                    # OIDC provider and GitHub Actions deploy role
 └── deploy_local.py              # Local deploy helper
 ```
 
 ## Deployment
+
+Run the one-time bootstrap root from a local machine before relying on GitHub Actions:
+
+```bash
+export GITHUB_TOKEN="YOUR_GITHUB_TOKEN"
+terraform -chdir=infra-bootstrap init
+terraform -chdir=infra-bootstrap apply
+```
+
+That bootstrap step creates the GitHub OIDC deploy role and writes the repository variables used by the deploy workflow, including `AWS_ROLE_ARN`.
 
 Pull requests are validated by [`.github/workflows/ci.yml`](./.github/workflows/ci.yml). Deployments happen through [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml) on pushes to `main`.
 Shared validation and build logic is centralized in reusable workflows under [`.github/workflows/`](./.github/workflows/).
@@ -57,7 +69,7 @@ Shared validation and build logic is centralized in reusable workflows under [`.
 ### CI/CD flow
 
 1. Pull requests run Terraform formatting and validation, backend tests, and the Astro production build.
-2. GitHub Actions uses the committed [`infra/terraform.tfvars`](./infra/terraform.tfvars) values and only injects secrets where needed.
+2. A one-time local apply from [`infra-bootstrap/`](./infra-bootstrap/) creates the OIDC deploy role and repository variables for GitHub Actions.
 3. GitHub Actions assumes an AWS role using OIDC only for the deploy workflow on `main`.
 4. Terraform applies infrastructure from [`infra/`](./infra).
 5. The frontend builds with `PUBLIC_API_URL` set from Terraform outputs.
@@ -79,23 +91,27 @@ python3 deploy_local.py
 
 - AWS CLI
 - Terraform `>= 1.5`
-- Node.js `>= 22.12.0`
+- Node.js `>= 24.0.0`
 - Python `>= 3.12`
 
 ### Terraform variables
 
-This repository commits [`infra/terraform.tfvars`](./infra/terraform.tfvars) because it contains stable, non-secret project configuration. Keep only the Cloudflare API token out of source control.
+This repository commits both [`infra/terraform.tfvars`](./infra/terraform.tfvars) and [`infra-bootstrap/terraform.tfvars`](./infra-bootstrap/terraform.tfvars) because they contain stable, non-secret project configuration. Keep only the Cloudflare API token out of source control.
 
 ```bash
 export TF_VAR_cloudflare_api_token="YOUR_CLOUDFLARE_API_TOKEN"
+export GITHUB_TOKEN="YOUR_GITHUB_TOKEN"
 ```
+
+`GITHUB_TOKEN` is only needed when running the bootstrap root locally.
 
 ### GitHub Actions configuration
 
-Deploys require these repository secrets:
+Deploys require this repository secret:
 
-- `AWS_ROLE_ARN`
 - `CLOUDFLARE_API_TOKEN`
+
+The bootstrap root manages the non-secret repository variables used by deploys, including `AWS_ROLE_ARN` and `AWS_REGION`.
 
 ## Testing
 
@@ -111,6 +127,7 @@ Run the main checks locally:
 ```bash
 (cd backend && python3 -m pip install -r requirements-dev.txt && pytest test_app.py)
 (cd frontend && npm ci && npm run build)
+(cd infra-bootstrap && terraform init)
 (cd infra && terraform fmt -check -recursive && terraform init -backend=false && terraform validate)
 ```
 
@@ -123,7 +140,7 @@ Run the main checks locally:
 
 ## Security And Delivery Notes
 
-- AWS access for CI is federated through the IAM role created by the `oidc` module.
+- AWS access for CI is federated through the IAM role created from [`infra-bootstrap/`](./infra-bootstrap/).
 - The S3 bucket is private and exposed through CloudFront origin access control.
 - Cloudflare handles DNS while AWS serves the site and API.
 - Terraform remains the source of truth for infrastructure state.

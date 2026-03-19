@@ -2,6 +2,7 @@
 *.tfstate*
 *.tfvars
 !infra/terraform.tfvars
+!infra-bootstrap/terraform.tfvars
 *.tfvars.json
 *.tfplan
 .DS_Store

@@ -86,7 +86,9 @@ const profileLinkClass =
           <p class="text-xl text-neutral-300 font-semibold mt-3">
             {portfolio.site.headline}
           </p>
-          <p class="text-base text-neutral-400 mt-5 max-w-2xl mx-auto leading-relaxed">
+          <p
+            class="text-base text-neutral-400 mt-5 max-w-2xl mx-auto leading-relaxed"
+          >
             {portfolio.hero.intro}
           </p>
         </div>
@@ -95,16 +97,24 @@ const profileLinkClass =
 
     <section>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl">
+        <article
+          class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl"
+        >
           <div class="card-body">
             <h2 class="card-title text-white text-2xl">About Me</h2>
-            <p class="text-neutral-400 leading-relaxed">{portfolio.about.body}</p>
+            <p class="text-neutral-400 leading-relaxed">
+              {portfolio.about.body}
+            </p>
           </div>
         </article>
-        <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl">
+        <article
+          class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl"
+        >
           <div class="card-body">
             <h2 class="card-title text-white text-2xl">Current Focus</h2>
-            <p class="text-neutral-400 leading-relaxed">{portfolio.about.focus}</p>
+            <p class="text-neutral-400 leading-relaxed">
+              {portfolio.about.focus}
+            </p>
           </div>
         </article>
       </div>
@@ -125,7 +135,9 @@ const profileLinkClass =
     </section>
 
     <section id="projects">
-      <h2 class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2">
+      <h2
+        class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2"
+      >
         Selected Projects
       </h2>
       <p class="max-w-3xl text-neutral-400 leading-relaxed mb-8">
@@ -133,76 +145,76 @@ const profileLinkClass =
       </p>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {
-          portfolio.projects.filter((project) => !project.hide).map((project) => (
-            <article
-              class:list={[
-                "card rounded-xl shadow-xl transition-all",
-                project.featured
-                  ? "bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-950 border border-primary/30 hover:border-primary/50 lg:col-span-3"
-                  : "bg-zinc-900 border border-neutral-800 hover:border-neutral-700",
-              ]}
-            >
-              <div class="card-body">
-                {
-                  project.featured && (
+          portfolio.projects
+            .filter((project) => !project.hide)
+            .map((project) => (
+              <article
+                class:list={[
+                  "card rounded-xl shadow-xl transition-all",
+                  project.featured
+                    ? "bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-950 border border-primary/30 hover:border-primary/50 lg:col-span-3"
+                    : "bg-zinc-900 border border-neutral-800 hover:border-neutral-700",
+                ]}
+              >
+                <div class="card-body">
+                  {project.featured && (
                     <p class="text-xs uppercase tracking-[0.24em] text-primary/80">
                       Featured Project
                     </p>
-                  )
-                }
-                {
-                  project.featuredNote && (
+                  )}
+                  {project.featuredNote && (
                     <p class="mt-2 text-sm font-semibold text-primary">
                       {project.featuredNote}
                     </p>
-                  )
-                }
-                <h3
-                  class:list={[
-                    "card-title text-white",
-                    project.featured ? "text-2xl mt-2" : "text-xl",
-                  ]}
-                >
-                  {project.name}
-                </h3>
-                <p
-                  class:list={[
-                    "text-neutral-400 leading-relaxed",
-                    project.featured ? "text-base" : "text-sm",
-                  ]}
-                >
-                  {project.summary}
-                </p>
-                <div class="flex flex-wrap gap-2 mt-3">
-                  {project.stack.map((item) => (
-                    <span class="badge badge-neutral bg-zinc-800/80 border border-zinc-700/50 rounded-md font-semibold">
-                      {item}
-                    </span>
-                  ))}
-                </div>
-                {project.links && (
-                  <div class="mt-5 flex flex-wrap gap-3">
-                    {project.links.map((link) => (
-                      <a
-                        href={link.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        class={projectLinkClass(link.kind)}
-                      >
-                        {link.label}
-                      </a>
+                  )}
+                  <h3
+                    class:list={[
+                      "card-title text-white",
+                      project.featured ? "text-2xl mt-2" : "text-xl",
+                    ]}
+                  >
+                    {project.name}
+                  </h3>
+                  <p
+                    class:list={[
+                      "text-neutral-400 leading-relaxed",
+                      project.featured ? "text-base" : "text-sm",
+                    ]}
+                  >
+                    {project.summary}
+                  </p>
+                  <div class="flex flex-wrap gap-2 mt-3">
+                    {project.stack.map((item) => (
+                      <span class="badge badge-neutral bg-zinc-800/80 border border-zinc-700/50 rounded-md font-semibold">
+                        {item}
+                      </span>
                     ))}
                   </div>
-                )}
-              </div>
-            </article>
-          ))
+                  {project.links && (
+                    <div class="mt-5 flex flex-wrap gap-3">
+                      {project.links.map((link) => (
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          class={projectLinkClass(link.kind)}
+                        >
+                          {link.label}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </article>
+            ))
         }
       </div>
     </section>
 
     <section>
-      <h2 class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2">
+      <h2
+        class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2"
+      >
         Experience Highlights
       </h2>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -214,20 +226,20 @@ const profileLinkClass =
                   {item.period}
                 </p>
                 <h3 class="card-title text-white text-xl">{item.role}</h3>
-                {
-                  item.companyUrl ? (
-                    <a
-                      href={item.companyUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      class="text-sm font-semibold text-primary hover:text-white transition-colors"
-                    >
-                      {item.company}
-                    </a>
-                  ) : (
-                    <p class="text-sm font-semibold text-primary">{item.company}</p>
-                  )
-                }
+                {item.companyUrl ? (
+                  <a
+                    href={item.companyUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    class="text-sm font-semibold text-primary hover:text-white transition-colors"
+                  >
+                    {item.company}
+                  </a>
+                ) : (
+                  <p class="text-sm font-semibold text-primary">
+                    {item.company}
+                  </p>
+                )}
                 <p class="text-sm text-neutral-400 leading-relaxed">
                   {item.summary}
                 </p>
@@ -239,7 +251,9 @@ const profileLinkClass =
     </section>
 
     <section>
-      <h2 class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2">
+      <h2
+        class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2"
+      >
         Capabilities
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -263,7 +277,9 @@ const profileLinkClass =
     </section>
 
     <section>
-      <h2 class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2">
+      <h2
+        class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2"
+      >
         Certification
       </h2>
       <div class="grid grid-cols-1 gap-5">
@@ -271,12 +287,15 @@ const profileLinkClass =
           portfolio.certifications.map((certification) => (
             <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl hover:border-neutral-700 transition-all">
               <div class="card-body">
-                <h3 class="card-title text-white text-xl">{certification.name}</h3>
+                <h3 class="card-title text-white text-xl">
+                  {certification.name}
+                </h3>
                 <p class="text-sm font-semibold text-primary">
                   {certification.issuer}
                 </p>
                 <p class="text-sm text-neutral-400">
-                  Issued {certification.issued} • Expires {certification.expires}
+                  Issued {certification.issued} • Expires{" "}
+                  {certification.expires}
                 </p>
               </div>
             </article>
@@ -286,11 +305,15 @@ const profileLinkClass =
     </section>
 
     <section id="contact">
-      <h2 class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2">
+      <h2
+        class="text-2xl font-bold text-white mb-6 border-b border-neutral-800 pb-2"
+      >
         Contact
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl">
+        <article
+          class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl"
+        >
           <div class="card-body">
             <p class="text-sm uppercase tracking-[0.24em] text-neutral-500">
               Email
@@ -303,22 +326,26 @@ const profileLinkClass =
             </a>
           </div>
         </article>
-        <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl">
+        <article
+          class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl"
+        >
           <div class="card-body">
             <p class="text-sm uppercase tracking-[0.24em] text-neutral-500">
               Profiles
             </p>
             <div class="flex flex-wrap gap-3 mt-3">
-              {portfolio.contact.profiles.map((profile) => (
-                <a
-                  href={profile.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  class={profileLinkClass}
-                >
-                  {profile.label}
-                </a>
-              ))}
+              {
+                portfolio.contact.profiles.map((profile) => (
+                  <a
+                    href={profile.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    class={profileLinkClass}
+                  >
+                    {profile.label}
+                  </a>
+                ))
+              }
             </div>
           </div>
         </article>
@@ -336,23 +363,6 @@ const profileLinkClass =
   </footer>
 
   <script>
-    if ("scrollRestoration" in history) {
-      history.scrollRestoration = "manual";
-    }
-
-    const navigationEntry = performance.getEntriesByType("navigation")[0];
-    const isReload = navigationEntry?.type === "reload";
-
-    if (isReload) {
-      if (window.location.hash) {
-        history.replaceState(null, "", window.location.pathname + window.location.search);
-      }
-
-      requestAnimationFrame(() => {
-        window.scrollTo(0, 0);
-      });
-    }
-
     const counterElement = document.getElementById("visitor_count_display");
     const apiBaseUrl = import.meta.env.PUBLIC_API_URL;
 

@@ -1,7 +1,3 @@
-# GitHub OIDC Configuration (Required for role scoping)
-github_org  = "atoumbre"
-github_repo = "cloud_resume_challenge"
-
 # AWS Configuration
 aws_region   = "us-east-1"
 project_name = "cloud-resume-challenge"

@@ -28,11 +28,6 @@ output "lambda_function_name" {
   value       = module.backend.lambda_function_name
 }
 
-output "github_actions_role_arn" {
-  description = "IAM Role ARN for GitHub Actions OIDC"
-  value       = module.oidc.github_actions_role_arn
-}
-
 output "acm_validation_records" {
   description = "CNAME records to create in Cloudflare for SSL certificate validation"
   value       = module.frontend.acm_validation_records

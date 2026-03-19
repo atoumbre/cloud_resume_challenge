@@ -44,9 +44,8 @@ resource "aws_iam_policy" "github_deploy_policy" {
         Effect = "Allow"
         Action = ["s3:*"]
         Resource = [
-          var.s3_bucket_arn,
-          "${var.s3_bucket_arn}/*",
           "arn:aws:s3:::${var.project_name}-*",
+          "arn:aws:s3:::${var.project_name}-*/*",
           "arn:aws:s3:::admin-terraform-state-*",
           "arn:aws:s3:::admin-terraform-state-*/*"
         ]
