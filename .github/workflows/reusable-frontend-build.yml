@@ -1,0 +1,37 @@
+name: Reusable Frontend Build
+
+on:
+  workflow_call:
+    inputs:
+      public_api_url:
+        description: Public API URL available during the frontend build.
+        required: true
+        type: string
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Restore NPM Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('frontend/package-lock.json') }}
+
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build Frontend
+        working-directory: frontend
+        env:
+          PUBLIC_API_URL: ${{ inputs.public_api_url }}
+        run: npm run build

@@ -6,83 +6,12 @@ on:
 
 jobs:
   terraform:
-    runs-on: ubuntu-latest
-    env:
-      TF_VAR_cloudflare_api_token: validation-token
-      TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Restore Terraform Plugin Cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ github.workspace }}/.terraform.d/plugin-cache
-          key: ${{ runner.os }}-terraform-${{ hashFiles('infra/.terraform.lock.hcl') }}
-
-      - name: Create Terraform Plugin Cache Directory
-        run: mkdir -p "$TF_PLUGIN_CACHE_DIR"
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Format Check
-        run: terraform -chdir=infra fmt -check -recursive
-
-      - name: Terraform Init
-        run: terraform -chdir=infra init -backend=false
-
-      - name: Terraform Validate
-        run: terraform -chdir=infra validate
+    uses: ./.github/workflows/reusable-terraform-checks.yml
 
   backend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Restore Pip Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt', 'backend/requirements-dev.txt') }}
-
-      - name: Install Backend Dependencies
-        run: python -m pip install --upgrade pip && python -m pip install -r backend/requirements-dev.txt
-
-      - name: Run Backend Tests
-        env:
-          AWS_DEFAULT_REGION: us-east-1
-        run: pytest backend/test_app.py
+    uses: ./.github/workflows/reusable-backend-tests.yml
 
   frontend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Restore NPM Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('frontend/package-lock.json') }}
-
-      - name: Install Frontend Dependencies
-        working-directory: frontend
-        run: npm ci
-
-      - name: Build Frontend
-        working-directory: frontend
-        env:
-          PUBLIC_API_URL: https://example.execute-api.us-east-1.amazonaws.com
-        run: npm run build
+    uses: ./.github/workflows/reusable-frontend-build.yml
+    with:
+      public_api_url: https://example.execute-api.us-east-1.amazonaws.com

@@ -1,0 +1,35 @@
+name: Reusable Terraform Checks
+
+on:
+  workflow_call:
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_cloudflare_api_token: validation-token
+      TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Restore Terraform Plugin Cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.terraform.d/plugin-cache
+          key: ${{ runner.os }}-terraform-${{ hashFiles('infra/.terraform.lock.hcl') }}
+
+      - name: Create Terraform Plugin Cache Directory
+        run: mkdir -p "$TF_PLUGIN_CACHE_DIR"
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Format Check
+        run: terraform -chdir=infra fmt -check -recursive
+
+      - name: Terraform Init
+        run: terraform -chdir=infra init -backend=false
+
+      - name: Terraform Validate
+        run: terraform -chdir=infra validate

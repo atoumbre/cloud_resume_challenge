@@ -52,6 +52,7 @@ cloud_resume_challenge/
 ## Deployment
 
 Pull requests are validated by [`.github/workflows/ci.yml`](./.github/workflows/ci.yml). Deployments happen through [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml) on pushes to `main`.
+Shared validation logic is centralized in reusable workflows under [`.github/workflows/`](./.github/workflows/).
 
 ### CI/CD flow
 
@@ -131,4 +132,3 @@ Run the main checks locally:
 
 - Add frontend smoke tests for the counter behavior against a deployed preview or local mock API.
 - Narrow the GitHub Actions deploy role permissions further as the infrastructure stabilizes.
-- Add a reusable GitHub Actions workflow to remove duplicated setup between CI and deploy jobs.
