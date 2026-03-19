@@ -24,8 +24,7 @@ resource "aws_iam_role" "github_actions_deploy_role" {
         }
         StringLike = {
           "token.actions.githubusercontent.com:sub" = [
-            "repo:${var.github_org}/${var.github_repo}:*",
-            "repo:${title(var.github_org)}/${var.github_repo}:*"
+            "repo:${var.github_org}/${var.github_repo}:ref:refs/heads/main"
           ]
         }
       }
@@ -66,14 +65,35 @@ resource "aws_iam_policy" "github_deploy_policy" {
       },
       # 4. CloudFront Management
       {
-        Effect   = "Allow"
-        Action   = ["cloudfront:*"]
-        Resource = ["*"] # CloudFront creates global ARNs often hard to scope statically for creation
+        Effect = "Allow"
+        Action = [
+          "cloudfront:CreateInvalidation",
+          "cloudfront:GetDistribution",
+          "cloudfront:GetDistributionConfig",
+          "cloudfront:UpdateDistribution",
+          "cloudfront:CreateDistribution",
+          "cloudfront:DeleteDistribution",
+          "cloudfront:GetInvalidation",
+          "cloudfront:ListDistributions",
+          "cloudfront:TagResource",
+          "cloudfront:CreateOriginAccessControl",
+          "cloudfront:GetOriginAccessControl",
+          "cloudfront:DeleteOriginAccessControl",
+          "cloudfront:ListOriginAccessControls"
+        ]
+        Resource = ["*"]
       },
       # 5. API Gateway Management
       {
-        Effect   = "Allow"
-        Action   = ["apigateway:*"]
+        Effect = "Allow"
+        Action = [
+          "apigateway:GET",
+          "apigateway:POST",
+          "apigateway:PUT",
+          "apigateway:PATCH",
+          "apigateway:DELETE",
+          "apigateway:TagResource"
+        ]
         Resource = ["*"]
       },
       # 6. IAM Scoped Management (For Lambda execution roles)
@@ -88,8 +108,16 @@ resource "aws_iam_policy" "github_deploy_policy" {
       },
       # 7. ACM Certificate Management (For Custom domain certificate)
       {
-        Effect   = "Allow"
-        Action   = ["acm:*"]
+        Effect = "Allow"
+        Action = [
+          "acm:RequestCertificate",
+          "acm:DescribeCertificate",
+          "acm:ListCertificates",
+          "acm:DeleteCertificate",
+          "acm:AddTagsToCertificate",
+          "acm:GetCertificate",
+          "acm:ListTagsForCertificate"
+        ]
         Resource = ["*"]
       }
     ]
