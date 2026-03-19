@@ -2,7 +2,6 @@ import json
 import boto3
 import os
 
-
 # Initialize DynamoDB resource lazily
 dynamodb = None
 TABLE_NAME = os.environ.get('TABLE_NAME', 'visitor_count_table')
