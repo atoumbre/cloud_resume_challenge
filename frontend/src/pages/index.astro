@@ -9,9 +9,21 @@ const projectLinkClass = (kind = "secondary") =>
 
 const profileLinkClass =
   "inline-flex items-center rounded-full border border-zinc-700 bg-zinc-800/60 px-4 py-2 text-sm font-semibold text-neutral-200 transition-colors hover:border-primary/50 hover:text-white hover:bg-zinc-800";
+
+const currentExperience = portfolio.experienceHighlights.filter(
+  (item) => item.current,
+);
+const previousExperience = portfolio.experienceHighlights.filter(
+  (item) => !item.current,
+);
 ---
 
-<Layout>
+<Layout
+  title={portfolio.site.metaTitle}
+  description={portfolio.site.metaDescription}
+  url={portfolio.site.url}
+  image={portfolio.site.ogImage}
+>
   <!-- 🌊 Background Effects -->
   <div
     class="fixed inset-0 bg-gradient-to-br from-neutral-900 via-zinc-900 to-black -z-10"
@@ -67,8 +79,10 @@ const profileLinkClass =
     >
   </div>
 
-  <main class="max-w-5xl mx-auto px-6 pb-24 space-y-20 mt-12">
-    <section class="hero text-center py-10">
+  <main
+    class="max-w-5xl mx-auto px-6 pb-24 space-y-14 md:space-y-16 mt-8 md:mt-10"
+  >
+    <section class="hero text-center py-8">
       <div class="hero-content flex-col">
         <div class="avatar online">
           <div
@@ -83,7 +97,7 @@ const profileLinkClass =
           >
             {portfolio.site.name}
           </h1>
-          <p class="text-xl text-neutral-300 font-semibold mt-3">
+          <p class="text-2xl text-neutral-200 font-semibold mt-4 leading-tight">
             {portfolio.site.headline}
           </p>
           <p
@@ -103,7 +117,7 @@ const profileLinkClass =
           <div class="card-body">
             <h2 class="card-title text-white text-2xl">About Me</h2>
             <p class="text-neutral-400 leading-relaxed">
-              {portfolio.about.body}
+              {portfolio.hero.about}
             </p>
           </div>
         </article>
@@ -113,24 +127,10 @@ const profileLinkClass =
           <div class="card-body">
             <h2 class="card-title text-white text-2xl">Current Focus</h2>
             <p class="text-neutral-400 leading-relaxed">
-              {portfolio.about.focus}
+              {portfolio.hero.focus}
             </p>
           </div>
         </article>
-      </div>
-    </section>
-
-    <section>
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {
-          portfolio.proofPoints.map((point) => (
-            <div class="card bg-zinc-900/55 border border-neutral-800/80 rounded-xl shadow-lg">
-              <div class="card-body">
-                <p class="text-sm text-neutral-300 leading-relaxed">{point}</p>
-              </div>
-            </div>
-          ))
-        }
       </div>
     </section>
 
@@ -140,7 +140,7 @@ const profileLinkClass =
       >
         Selected Projects
       </h2>
-      <p class="max-w-3xl text-neutral-400 leading-relaxed mb-8">
+      <p class="max-w-3xl text-neutral-400 leading-relaxed mb-7">
         {portfolio.projectsIntro}
       </p>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -217,36 +217,79 @@ const profileLinkClass =
       >
         Experience Highlights
       </h2>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {
-          portfolio.experienceHighlights.map((item) => (
-            <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl hover:border-neutral-700 transition-all">
-              <div class="card-body">
-                <p class="text-xs uppercase tracking-[0.24em] text-neutral-500">
-                  {item.period}
-                </p>
-                <h3 class="card-title text-white text-xl">{item.role}</h3>
-                {item.companyUrl ? (
-                  <a
-                    href={item.companyUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    class="text-sm font-semibold text-primary hover:text-white transition-colors"
-                  >
-                    {item.company}
-                  </a>
-                ) : (
-                  <p class="text-sm font-semibold text-primary">
-                    {item.company}
-                  </p>
-                )}
-                <p class="text-sm text-neutral-400 leading-relaxed">
-                  {item.summary}
-                </p>
-              </div>
-            </article>
-          ))
-        }
+      <div class="space-y-7">
+        <div>
+          <p class="text-sm uppercase tracking-[0.24em] text-neutral-500 mb-4">
+            Current
+          </p>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {
+              currentExperience.map((item) => (
+                <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl hover:border-neutral-700 transition-all">
+                  <div class="card-body">
+                    <p class="text-xs uppercase tracking-[0.24em] text-neutral-500">
+                      {item.period}
+                    </p>
+                    <h3 class="card-title text-white text-xl">{item.role}</h3>
+                    {item.companyUrl ? (
+                      <a
+                        href={item.companyUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        class="text-sm font-semibold text-primary hover:text-white transition-colors"
+                      >
+                        {item.company}
+                      </a>
+                    ) : (
+                      <p class="text-sm font-semibold text-primary">
+                        {item.company}
+                      </p>
+                    )}
+                    <p class="text-sm text-neutral-400 leading-relaxed">
+                      {item.summary}
+                    </p>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+        <div>
+          <p class="text-sm uppercase tracking-[0.24em] text-neutral-500 mb-4">
+            Previous
+          </p>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {
+              previousExperience.map((item) => (
+                <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl hover:border-neutral-700 transition-all">
+                  <div class="card-body">
+                    <p class="text-xs uppercase tracking-[0.24em] text-neutral-500">
+                      {item.period}
+                    </p>
+                    <h3 class="card-title text-white text-xl">{item.role}</h3>
+                    {item.companyUrl ? (
+                      <a
+                        href={item.companyUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        class="text-sm font-semibold text-primary hover:text-white transition-colors"
+                      >
+                        {item.company}
+                      </a>
+                    ) : (
+                      <p class="text-sm font-semibold text-primary">
+                        {item.company}
+                      </p>
+                    )}
+                    <p class="text-sm text-neutral-400 leading-relaxed">
+                      {item.summary}
+                    </p>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </div>
       </div>
     </section>
 
@@ -290,13 +333,28 @@ const profileLinkClass =
                 <h3 class="card-title text-white text-xl">
                   {certification.name}
                 </h3>
-                <p class="text-sm font-semibold text-primary">
+                <a
+                  href={certification.verifyUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="text-sm font-semibold text-primary hover:text-white transition-colors"
+                >
                   {certification.issuer}
-                </p>
+                </a>
                 <p class="text-sm text-neutral-400">
                   Issued {certification.issued} • Expires{" "}
                   {certification.expires}
                 </p>
+                <div class="mt-4">
+                  <a
+                    href={certification.verifyUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    class="inline-flex items-center rounded-full border border-zinc-700 px-4 py-2 text-sm font-semibold text-neutral-200 transition-colors hover:border-primary/50 hover:text-white"
+                  >
+                    Verify on Credly
+                  </a>
+                </div>
               </div>
             </article>
           ))
@@ -316,11 +374,14 @@ const profileLinkClass =
         >
           <div class="card-body">
             <p class="text-sm uppercase tracking-[0.24em] text-neutral-500">
-              Email
+              Let's Work Together
+            </p>
+            <p class="text-sm text-neutral-400 leading-relaxed">
+              {portfolio.contact.cta}
             </p>
             <a
               href={`mailto:${portfolio.contact.email}`}
-              class="text-lg font-semibold text-white hover:text-primary transition-colors"
+              class="text-lg font-semibold text-white hover:text-primary transition-colors mt-3"
             >
               {portfolio.contact.email}
             </a>

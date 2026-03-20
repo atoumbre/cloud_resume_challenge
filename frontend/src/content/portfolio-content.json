@@ -1,10 +1,16 @@
 {
   "site": {
     "name": "Atoumbré Kouassi",
-    "headline": "Cloud engineer and software systems builder"
+    "headline": "Cloud engineer and software systems builder",
+    "metaTitle": "Atoumbré Kouassi | Cloud, Observability, and Systems Engineer",
+    "metaDescription": "Portfolio of Atoumbré Kouassi, focused on cloud infrastructure, observability, backend systems, and protocol architecture.",
+    "url": "https://atoumbre.me",
+    "ogImage": "https://atoumbre.me/og-image.svg"
   },
   "hero": {
-    "intro": "I design cloud infrastructure, observability platforms, and production-style software systems with AWS, Terraform, GitHub Actions, Python, and OpenTelemetry.",
+    "intro": "With 17+ years spanning telecom service delivery, data engineering, DeFi protocol architecture, and cloud engineering, I design infrastructure, observability foundations, and backend systems with an operator's mindset.",
+    "about": "My background spans service delivery, network systems, data engineering, and software development. That range gives me a practical engineering mindset: I care about reliability, automation, visibility, and systems that teams can actually operate.",
+    "focus": "Today I focus on cloud platforms and observability, building tooling and infrastructure that reduce onboarding time, standardize telemetry, and improve operational confidence.",
     "primaryActions": [
       {
         "label": "View Projects",
@@ -40,12 +46,6 @@
       }
     ]
   },
-  "proofPoints": [
-    "17+ years of experience across IT, networks, data, and software",
-    "Currently building Grafana Cloud onboarding automation at Kauris",
-    "AWS Certified Solutions Architect - Associate",
-    "Hands-on with AWS, Terraform, GitHub Actions, Python, TypeScript, Dart, and Flutter"
-  ],
   "projectsIntro": "Selected work across cloud infrastructure, observability, backend systems, and developer tooling.",
   "projects": [
     {
@@ -75,7 +75,7 @@
     },
     {
       "name": "Weft Backend Services",
-      "summary": "A production-oriented backend services monorepo focused on workload decomposition, event-driven processing, and time-sensitive protocol operations.",
+      "summary": "Backend services for a decentralized lending protocol, separating event-driven workloads, protocol operations, and time-sensitive risk handling into maintainable service boundaries.",
       "links": [
         {
           "label": "Repository",
@@ -92,7 +92,7 @@
     },
     {
       "name": "Weft Backend Resources",
-      "summary": "Terraform-managed AWS infrastructure for backend workloads, supporting a production-style environment with shared cloud resources, deployment primitives, and operational controls.",
+      "summary": "Terraform-managed AWS foundation for backend workloads, turning shared cloud resources and deployment primitives into repeatable environment setup for protocol operations.",
       "links": [
         {
           "label": "Repository",
@@ -109,7 +109,7 @@
     },
     {
       "name": "Levit",
-      "summary": "A deterministic reactive architecture library for Dart and Flutter that explores application state, dependency flow, and developer ergonomics.",
+      "summary": "A reactive architecture library for Dart and Flutter focused on deterministic state propagation and dependency flow in apps that need predictability over hidden magic.",
       "links": [
         {
           "label": "Repository",
@@ -149,24 +149,13 @@
       ]
     }
   ],
-  "about": {
-    "body": "My background spans service delivery, network systems, data engineering, and software development. That range gives me a practical engineering mindset: I care about reliability, automation, visibility, and systems that teams can actually operate.",
-    "whatIBuild": {
-      "body": "I build systems that need to be shipped, observed, and operated cleanly across infrastructure, software, and delivery workflows.",
-      "areas": [
-        "Terraform-managed AWS infrastructure and deployment pipelines",
-        "Observability foundations with Grafana and OpenTelemetry",
-        "Backend services and developer tooling for maintainable systems"
-      ]
-    },
-    "focus": "Today I focus on cloud platforms and observability, building tooling and infrastructure that reduce onboarding time, standardize telemetry, and improve operational confidence."
-  },
   "experienceHighlights": [
     {
       "role": "Cloud Engineer",
       "company": "Kauris",
       "companyUrl": "https://kauris.ca",
       "period": "Dec 2025 - Present",
+      "current": true,
       "summary": "Building automation for Grafana Cloud onboarding and observability standardization with Terraform and OpenTelemetry."
     },
     {
@@ -174,6 +163,7 @@
       "company": "Weft Finance",
       "companyUrl": "https://weft.finance",
       "period": "Jan 2023 - Present",
+      "current": true,
       "summary": "Co-founded a decentralized lending protocol on Radix DLT. Designed two iterations of the protocol architecture in Scrypto, with emphasis on asset safety, transaction atomicity, and operational observability. The protocol reached roughly $3M peak TVL and remains live in production."
     },
     {
@@ -247,10 +237,12 @@
       "name": "AWS Certified Solutions Architect - Associate",
       "issuer": "Amazon Web Services Training and Certification",
       "issued": "December 15, 2025",
-      "expires": "December 15, 2028"
+      "expires": "December 15, 2028",
+      "verifyUrl": "https://www.credly.com/badges/3c62857a-79c1-444e-827e-63d7a9db1318"
     }
   ],
   "contact": {
+    "cta": "Open to cloud engineering, platform, observability, and backend systems opportunities.",
     "email": "atoumbre@gmail.com",
     "profiles": [
       {
