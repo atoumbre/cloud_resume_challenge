@@ -163,11 +163,18 @@
   },
   "experienceHighlights": [
     {
-      "role": "Cloud Engineer (Intern)",
+      "role": "Cloud Engineer",
       "company": "Kauris",
       "companyUrl": "https://kauris.ca",
       "period": "Dec 2025 - Present",
       "summary": "Building automation for Grafana Cloud onboarding and observability standardization with Terraform and OpenTelemetry."
+    },
+    {
+      "role": "Founding Engineer & Architect",
+      "company": "Weft Finance",
+      "companyUrl": "https://weft.finance",
+      "period": "Jan 2023 - Present",
+      "summary": "Co-founded a decentralized lending protocol on Radix DLT. Designed two iterations of the protocol architecture in Scrypto, with emphasis on asset safety, transaction atomicity, and operational observability. The protocol reached roughly $3M peak TVL and remains live in production."
     },
     {
       "role": "Data Engineer",
