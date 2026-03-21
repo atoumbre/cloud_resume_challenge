@@ -1,2 +1,7 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+html[data-theme="luxury"] {
+  /* Brighter blue for clearer contrast against the dark background. */
+  --color-primary: #61b8ff;
+}

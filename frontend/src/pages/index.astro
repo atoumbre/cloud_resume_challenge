@@ -4,7 +4,7 @@ import portfolio from "../content/portfolio-content.json";
 
 const projectLinkClass = (kind = "secondary") =>
   kind === "primary"
-    ? "inline-flex items-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary/90"
+    ? "inline-flex items-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-primary/90"
     : "inline-flex items-center rounded-full border border-zinc-700 px-4 py-2 text-sm font-semibold text-neutral-200 transition-colors hover:border-neutral-500 hover:text-white";
 
 const profileLinkClass =
@@ -219,33 +219,39 @@ const previousExperience = portfolio.experienceHighlights.filter(
       </h2>
       <div class="space-y-7">
         <div>
-          <p class="text-sm uppercase tracking-[0.24em] text-neutral-500 mb-4">
-            Current
-          </p>
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div class="grid grid-cols-1 gap-5">
             {
               currentExperience.map((item) => (
-                <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl hover:border-neutral-700 transition-all">
+                <article class="card rounded-xl shadow-xl transition-all bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-950 border border-primary/30 hover:border-primary/50">
                   <div class="card-body">
-                    <p class="text-xs uppercase tracking-[0.24em] text-neutral-500">
-                      {item.period}
+                    <p class="text-xs uppercase tracking-[0.24em] text-primary/80">
+                      Current Experience
                     </p>
-                    <h3 class="card-title text-white text-xl">{item.role}</h3>
-                    {item.companyUrl ? (
-                      <a
-                        href={item.companyUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        class="text-sm font-semibold text-primary hover:text-white transition-colors"
-                      >
-                        {item.company}
-                      </a>
-                    ) : (
-                      <p class="text-sm font-semibold text-primary">
-                        {item.company}
+                    <div class="mt-2 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                      <div class="space-y-2">
+                        <h3 class="card-title text-white text-2xl">
+                          {item.role}
+                        </h3>
+                        {item.companyUrl ? (
+                          <a
+                            href={item.companyUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            class="text-sm font-semibold text-primary hover:text-white transition-colors"
+                          >
+                            {item.company}
+                          </a>
+                        ) : (
+                          <p class="text-sm font-semibold text-primary">
+                            {item.company}
+                          </p>
+                        )}
+                      </div>
+                      <p class="text-xs uppercase tracking-[0.24em] text-neutral-500 md:pt-1">
+                        {item.period}
                       </p>
-                    )}
-                    <p class="text-sm text-neutral-400 leading-relaxed">
+                    </div>
+                    <p class="text-base text-neutral-400 leading-relaxed mt-2">
                       {item.summary}
                     </p>
                   </div>
@@ -255,10 +261,7 @@ const previousExperience = portfolio.experienceHighlights.filter(
           </div>
         </div>
         <div>
-          <p class="text-sm uppercase tracking-[0.24em] text-neutral-500 mb-4">
-            Previous
-          </p>
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
             {
               previousExperience.map((item) => (
                 <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl hover:border-neutral-700 transition-all">

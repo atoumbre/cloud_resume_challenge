@@ -1,16 +1,16 @@
 {
   "site": {
     "name": "Atoumbré Kouassi",
-    "headline": "Cloud engineer and software systems builder",
+    "headline": "Cloud & Platform Engineer focused on reliability, automation, and observability",
     "metaTitle": "Atoumbré Kouassi | Cloud, Observability, and Systems Engineer",
     "metaDescription": "Portfolio of Atoumbré Kouassi, focused on cloud infrastructure, observability, backend systems, and protocol architecture.",
     "url": "https://atoumbre.me",
     "ogImage": "https://atoumbre.me/og-image.svg"
   },
   "hero": {
-    "intro": "With 17+ years spanning telecom service delivery, data engineering, DeFi protocol architecture, and cloud engineering, I design infrastructure, observability foundations, and backend systems with an operator's mindset.",
-    "about": "My background spans service delivery, network systems, data engineering, and software development. That range gives me a practical engineering mindset: I care about reliability, automation, visibility, and systems that teams can actually operate.",
-    "focus": "Today I focus on cloud platforms and observability, building tooling and infrastructure that reduce onboarding time, standardize telemetry, and improve operational confidence.",
+    "intro": "With 17+ years across telecom operations, cloud engineering, data systems, and protocol architecture, I build high-availability infrastructure and observability foundations with an operator's understanding of reliability at scale.",
+    "about": "My background in network systems, service delivery, and software engineering gives me a practical advantage: I design systems that are not only built well, but can also be operated, monitored, and scaled with confidence.",
+    "focus": "Today I focus on cloud platforms and observability, building tooling and infrastructure that shorten onboarding, standardize telemetry, and improve operational confidence.",
     "primaryActions": [
       {
         "label": "View Projects",
@@ -54,11 +54,6 @@
       "featured": true,
       "featuredNote": "This portfolio site is built and deployed from this project.",
       "links": [
-        {
-          "label": "Live Site",
-          "href": "https://atoumbre.me",
-          "kind": "primary"
-        },
         {
           "label": "Repository",
           "href": "https://github.com/atoumbre/cloud_resume_challenge",
@@ -151,19 +146,18 @@
   ],
   "experienceHighlights": [
     {
-      "role": "Cloud Engineer",
+      "role": "Cloud & DevOps Engineer",
       "company": "Kauris",
       "companyUrl": "https://kauris.ca",
       "period": "Dec 2025 - Present",
       "current": true,
-      "summary": "Building automation for Grafana Cloud onboarding and observability standardization with Terraform and OpenTelemetry."
+      "summary": "Standardizing observability across cloud environments. Automating Grafana Cloud enrollment and telemetry pipelines with Terraform to reduce onboarding time for developer teams by 70%."
     },
     {
       "role": "Founding Engineer & Architect",
       "company": "Weft Finance",
       "companyUrl": "https://weft.finance",
-      "period": "Jan 2023 - Present",
-      "current": true,
+      "period": "Jan 2023 - Dec 2025",
       "summary": "Co-founded a decentralized lending protocol on Radix DLT. Designed two iterations of the protocol architecture in Scrypto, with emphasis on asset safety, transaction atomicity, and operational observability. The protocol reached roughly $3M peak TVL and remains live in production."
     },
     {
