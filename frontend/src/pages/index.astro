@@ -1,6 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import portfolio from "../content/portfolio-content.json";
+import awsSaaBadge from "../../../docs/certs/aws-saa.png";
+import terraformAssociateBadge from "../../../docs/certs/hcp-terraform-associate.png";
 
 const projectLinkClass = (kind = "secondary") =>
   kind === "primary"
@@ -16,6 +18,16 @@ const currentExperience = portfolio.experienceHighlights.filter(
 const previousExperience = portfolio.experienceHighlights.filter(
   (item) => !item.current,
 );
+
+const certificationBadgeImages: Record<string, { src: string }> = {
+  "AWS Certified Solutions Architect - Associate": awsSaaBadge,
+  "HashiCorp Certified: Terraform Associate (004)": terraformAssociateBadge,
+};
+
+const certifications = portfolio.certifications.map((certification) => ({
+  ...certification,
+  badgeImage: certificationBadgeImages[certification.name] ?? null,
+}));
 ---
 
 <Layout
@@ -330,33 +342,45 @@ const previousExperience = portfolio.experienceHighlights.filter(
       </h2>
       <div class="grid grid-cols-1 gap-5">
         {
-          portfolio.certifications.map((certification) => (
+          certifications.map((certification) => (
             <article class="card bg-zinc-900 border border-neutral-800 rounded-xl shadow-xl hover:border-neutral-700 transition-all">
-              <div class="card-body">
-                <h3 class="card-title text-white text-xl">
-                  {certification.name}
-                </h3>
-                <a
-                  href={certification.verifyUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  class="text-sm font-semibold text-primary hover:text-white transition-colors"
-                >
-                  {certification.issuer}
-                </a>
-                <p class="text-sm text-neutral-400">
-                  Issued {certification.issued} • Expires{" "}
-                  {certification.expires}
-                </p>
-                <div class="mt-4">
+              <div class="card-body gap-5 md:grid md:grid-cols-[minmax(0,1fr)_120px] md:items-center">
+                {certification.badgeImage && (
+                  <div class="order-1 mx-auto md:order-2 md:mx-0 md:justify-self-end">
+                    <img
+                      src={certification.badgeImage.src}
+                      alt={`${certification.name} badge`}
+                      class="h-24 w-24 rounded-lg object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <div class="order-2 md:order-1">
+                  <h3 class="card-title text-white text-xl">
+                    {certification.name}
+                  </h3>
                   <a
                     href={certification.verifyUrl}
                     target="_blank"
                     rel="noreferrer"
-                    class="inline-flex items-center rounded-full border border-zinc-700 px-4 py-2 text-sm font-semibold text-neutral-200 transition-colors hover:border-primary/50 hover:text-white"
+                    class="text-sm font-semibold text-primary hover:text-white transition-colors"
                   >
-                    Verify on Credly
+                    {certification.issuer}
                   </a>
+                  <p class="text-sm text-neutral-400">
+                    Issued {certification.issued} • Expires{" "}
+                    {certification.expires}
+                  </p>
+                  <div class="mt-4">
+                    <a
+                      href={certification.verifyUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="inline-flex items-center rounded-full border border-zinc-700 px-4 py-2 text-sm font-semibold text-neutral-200 transition-colors hover:border-primary/50 hover:text-white"
+                    >
+                      Verify on Credly
+                    </a>
+                  </div>
                 </div>
               </div>
             </article>

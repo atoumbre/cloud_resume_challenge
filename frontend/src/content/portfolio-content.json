@@ -233,6 +233,13 @@
       "issued": "December 15, 2025",
       "expires": "December 15, 2028",
       "verifyUrl": "https://www.credly.com/badges/3c62857a-79c1-444e-827e-63d7a9db1318"
+    },
+    {
+      "name": "HashiCorp Certified: Terraform Associate (004)",
+      "issuer": "HashiCorp",
+      "issued": "March 24, 2026",
+      "expires": "March 24, 2029",
+      "verifyUrl": "https://www.credly.com/badges/8fb70698-2ae6-4c05-b726-165a81ecc074"
     }
   ],
   "contact": {
@@ -248,12 +255,12 @@
         "href": "https://www.credly.com/users/atoumbre-kouassi/"
       },
       {
-        "label": "LinkedIn",
-        "href": "https://www.linkedin.com/in/atoumbre/"
-      },
-      {
         "label": "GitHub",
         "href": "https://github.com/atoumbre"
+      },
+      {
+        "label": "LinkedIn",
+        "href": "https://www.linkedin.com/in/atoumbre/"
       }
     ]
   }
